@@ -21,7 +21,7 @@ resource_dir = "../scratch"
 # Validation directory. Should contain folders of pattern ids with images in them.
 validation_dir = "../scratch/val"
 # URL to connect to API for upadates
-api_url = "http://localhost:8080"
+api_url = "http://0.0.0.0:8080"
 # IDs to skip when training the model. Use when training errors due to corrupted image files.
 skip_ids = [67001]
 # Least acceptible validation percent that will still deploy the model
@@ -37,7 +37,7 @@ resource_dir = "../scratch"
 # Number of results to get from the model
 top_k = 10
 # Server settings
-host = "localhost"
+host = "0.0.0.0"
 port = 8080
 # Number of server processes to spawn. Each will load the model, so watch VRAM. Allows for horizontal scaling.
 workers = 1
