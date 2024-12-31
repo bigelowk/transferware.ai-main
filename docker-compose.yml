@@ -1,0 +1,60 @@
+services:
+  # Our replicated query apis
+  query_api:
+    build:
+      dockerfile: query_api.dockerfile
+    ports:
+      - "8080"
+    volumes:
+      - ./python_src/scratch:/python_src/scratch # TODO match your system, this is the resource dir
+    environment:
+      - "TRANSFERWARE_QUERY.TORCH_DEVICE=cpu" # TODO with the nvidia runtime this can be cuda
+    deploy:
+      replicas: 1
+    depends_on:
+      - balancer
+      - broker
+    labels:
+      # Strip /api as the python server serves on root
+      - "traefik.http.middlewares.strip-api.stripprefix.prefixes=/api"
+      # Namespace query api on /api to allow static site on root
+      - traefik.http.routers.query-api.rule=PathPrefix(`/api`)
+      - traefik.http.routers.query-api.middlewares=strip-api
+
+  # Serves the frontend
+  static_site:
+    build:
+      dockerfile: static_site.dockerfile
+    ports:
+      - "8080"
+    deploy:
+      replicas: 1
+    depends_on:
+      - balancer
+    labels:
+      - "traefik.http.routers.static-site.rule=PathPrefix(`/`) && !PathPrefix(`/api`)"
+
+  # MQTT broker
+  broker:
+    hostname: broker
+    image: eclipse-mosquitto
+    ports:
+      - "1883"
+    volumes:
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
+    depends_on:
+      - balancer
+    labels:
+      - "traefik.enable=false"
+
+  # Reverse proxy
+  balancer:
+    image: traefik
+    ports:
+      # Our application
+      - "80:80"
+      # The Web UI (enabled by --api.insecure=true)
+      - "8080:8080"
+    volumes:
+      - ./traefik.yml:/etc/traefik/traefik.yml
+      - /var/run/docker.sock:/var/run/docker.sock

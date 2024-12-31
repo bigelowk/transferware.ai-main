@@ -1,0 +1,22 @@
+/* HTML: <div class="loader"></div> */
+.loader {
+  width: fit-content;
+  font-weight: bold;
+  font-family: monospace;
+  white-space: pre;
+  font-size: 29px;
+  line-height: 1.5em;
+  height:1.2em;
+  overflow: hidden;
+  color: rgb(0, 0, 0);
+}
+.loader:before {
+  content:"Loading...\A𓃭ading...\A𓃭 𓍯ading...\A𓃭𓍯𓄿ding...\A𓃭𓍯𓄿𓂧ing...\A𓃭𓍯𓄿𓂧𓇋ng...\A𓃭𓍯𓄿𓂧𓇋𓈖g...\A𓃭𓍯𓄿𓂧𓇋𓈖𓀍...\A𓃭𓍯𓄿𓂧𓇋𓈖𓀍𓆸..\A𓃭𓍯𓄿𓂧𓇋𓈖𓀍𓆸𓅠.\A𓃭𓍯𓄿𓂧𓇋𓈖𓀍𓆸𓅠𓆄"; 
+  white-space: pre;
+  display: inline-block;
+  animation: l39 1s infinite steps(11) alternate;
+}
+
+@keyframes l39 {
+  100%{transform: translateY(-100%)}
+}
