@@ -3,7 +3,7 @@
 # Abstract factory used
 model_implimentation = "ZhaoModelFactory"
 # Changes wether the cache will be automatically updated. Use for debugging
-update_cache = false
+update_cache = true
 # Token used for controling access to query api
 access_token = "CHANGE ME" # TODO change for prod
 
