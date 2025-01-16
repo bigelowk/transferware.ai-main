@@ -796,7 +796,7 @@ class ZhaoTrainer(Trainer):
                 skip_ids.append(pattern_ids[i])
 
         # display the corrupted images
-        logging.info(f"Cache has {len(skip_ids)} corrupted images")
+        logging.info(f"Cache has {len(skip_ids)} patterns with corrupted images")
         logging.info(f"Corrupted patterns: {skip_ids}")
 
         index.build(10000)
