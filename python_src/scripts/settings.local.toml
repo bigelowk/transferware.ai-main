@@ -23,7 +23,7 @@ validation_dir = "../scratch/val" # TODO change for prod
 # URL to connect to API for upadates
 api_url = "http://localhost:8080"
 # IDs to skip when training the model. Use when training errors due to corrupted image files.
-skip_ids = [67001]
+skip_ids = [67001, 81925, 81962, 81967, 81988, 81994, 82034]
 # Least acceptible validation percent that will still deploy the model
 validation_threshold = 0.7 # TODO change for prod
 # Updates index only when updating, rather than retraining the model entirely
@@ -42,6 +42,6 @@ port = 8080
 # Number of server processes to spawn. Each will load the model, so watch VRAM. Allows for horizontal scaling.
 workers = 1
 # IDs to skip when training the model. Use when training errors due to corrupted image files.
-skip_ids = [67001]
+skip_ids = [67001, 81925, 81962, 81967, 81988, 81994, 82034]
 # CORS origins to allow
 origins = ["*"]
