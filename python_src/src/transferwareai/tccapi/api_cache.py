@@ -162,6 +162,7 @@ class ApiCache:
                 buffer.write(json.dumps(patterns, indent=2))
 
         # Make sure that the cache is clean -- see CleanCache file for details
+        logging.info(f"Cleaning Cache")
         clean_cache(_cache_file)
 
         df = pl.read_json(_cache_file)
