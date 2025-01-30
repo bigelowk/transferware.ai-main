@@ -11,7 +11,7 @@ access_token = "CHANGE ME"
 [training]
 torch_device = "cpu"
 # Num epochs to train
-epochs = 30
+epochs = 15
 # Number of epochs val loss worsens before we early stop
 early_stopping_thresh = 3
 # Num images loaded per step in epoch
