@@ -27,32 +27,27 @@ def clean_cache(filename):
     df = pd.read_json(filename)
 
     # remove records for maker -- these are not records for specific patterns but rater just a singular makers mark
-    problem_indexes = df[df['maker'].notna()].index if 'maker' in df.keys() else []
+    df_only_necessary_columns = df[['id', 'url', 'name', 'pattern_number', 'title', 'alternate_names',
+                                    'category', 'border', 'makers', 'marks', 'images', 'features']]
 
-    new_cache = []
-    with open (filename, "r") as f:
-        temp_cache = json.load(f)
 
-    for i in range(len(temp_cache)):
-        if i not in problem_indexes:
-            # replace anywhere that there is False with an empty dictionary to make sure that the data type of the column is uniform
-            if isinstance(temp_cache[i]['print_process'], bool):    # this will either be false or a dictionary
-                temp_cache[i]['print_process'] = {}
-            new_cache.append(temp_cache[i])
+    json_str = df_only_necessary_columns.to_json(orient='records', indent=2)
+    json_str = json_str.replace(r'\/', '/')
 
-    with open(filename, "w") as f:
-       json.dump(new_cache, f, indent=2)
+    with open(filename, 'w') as file:
+        file.write(json_str)
 
     return
 
 
 if __name__ == "__main__":
-    clean_cache("bad_cache.json")
 
-    cache = pl.read_json("cache.json", infer_schema_length=100)
+    cache_file = "cache.json"
+    clean_cache(cache_file)
 
-    # use this to check if row that previously said "false" is now {}
+    cache = pl.read_json(cache_file)
+
+    # use this to look at what the data looks like
     test = cache.filter(pl.col("id") == 81193)
     print(test)
     pass
-

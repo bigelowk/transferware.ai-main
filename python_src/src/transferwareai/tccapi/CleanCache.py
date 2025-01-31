@@ -10,7 +10,7 @@ not be read into a polars df without throwing an error.
 The two errors we encountered are as follows: 
 1) print_process data type error: polars.exceptions.ComputeError: error deserializing value "Static(Bool(false))" as struct
 We compared the expected schema to the cache and found that in some cases, print_process had the value 'false' instead
-of the expected dictionary structure. 
+of the expected dictionary structure. Similar errors will occur when the columns have inconsistent data types
 
 2) maker feature: polars.exceptions.ComputeError: extra key in struct data: maker
 This meant that there was a key trying to be read into the df that is different from the
@@ -19,39 +19,34 @@ full patterns and not just components of a pattern. Since maker has a different 
 a full pattern, it threw the error. We identified and removed these maker keys by reading them into a pandas df and removing
 them before rewriting the cache file
 
-** Since this error originates from how TCC structures the pattern information, this script
-may need to be updated to solve additional errors
+To solve these issues, we will only take the relevant selection of the columns.
 """
 
 def clean_cache(filename):
     df = pd.read_json(filename)
 
     # remove records for maker -- these are not records for specific patterns but rater just a singular makers mark
-    problem_indexes = df[df['maker'].notna()].index if 'maker' in df.keys() else []
+    df_only_necessary_columns = df[['id', 'url', 'name', 'pattern_number', 'title', 'alternate_names',
+                                    'category', 'border', 'makers', 'marks', 'images', 'features']]
 
-    new_cache = []
-    with open (filename, "r") as f:
-        temp_cache = json.load(f)
 
-    for i in range(len(temp_cache)):
-        if i not in problem_indexes:
-            # replace anywhere that there is False with an empty dictionary to make sure that the data type of the column is uniform
-            if isinstance(temp_cache[i]['print_process'], bool):    # this will either be false or a dictionary
-                temp_cache[i]['print_process'] = {}
-            new_cache.append(temp_cache[i])
+    json_str = df_only_necessary_columns.to_json(orient='records', indent=2)
+    json_str = json_str.replace(r'\/', '/')
 
-    with open(filename, "w") as f:
-       json.dump(new_cache, f, indent=2)
+    with open(filename, 'w') as file:
+        file.write(json_str)
 
     return
 
 
 if __name__ == "__main__":
-    clean_cache("bad_cache.json")
 
-    cache = pl.read_json("cache.json", infer_schema_length=100)
+    cache_file = "cache.json"
+    clean_cache(cache_file)
 
-    # use this to check if row that previously said "false" is now {}
+    cache = pl.read_json(cache_file)
+
+    # use this to look at what the data looks like
     test = cache.filter(pl.col("id") == 81193)
     print(test)
     pass
