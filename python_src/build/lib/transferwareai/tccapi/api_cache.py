@@ -16,6 +16,8 @@ from aiofile import async_open
 
 import nest_asyncio
 
+from transferwareai.tccapi.CleanCache import clean_cache
+
 nest_asyncio.apply()
 
 
@@ -158,6 +160,10 @@ class ApiCache:
             # Write cache to disk
             with open(_cache_file, "w") as buffer:
                 buffer.write(json.dumps(patterns, indent=2))
+
+        # Make sure that the cache is clean -- see CleanCache file for details
+        logging.info(f"Cleaning Cache")
+        clean_cache(_cache_file)
 
         df = pl.read_json(_cache_file)
 

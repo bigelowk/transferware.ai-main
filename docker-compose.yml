@@ -10,7 +10,7 @@ services:
     environment:
       - "TRANSFERWARE_QUERY.TORCH_DEVICE=cpu" # TODO with the nvidia runtime this can be cuda
     deploy:
-      replicas: 1
+      replicas: 2
     depends_on:
       - balancer
       - broker
@@ -28,7 +28,7 @@ services:
     ports:
       - "8080"
     deploy:
-      replicas: 1
+      replicas: 2
     depends_on:
       - balancer
     labels:
