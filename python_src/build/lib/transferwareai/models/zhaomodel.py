@@ -795,7 +795,11 @@ class EmbeddingsValidator(GenericValidator):
     def validate(
         self, model: ZhaoModel, validation_set: ImageFolder
     ) -> tuple[dict[int, float], float]:
-        validation_set.transform = model.model.transform
+
+        # turn the images into tensors
+        # do not apply the normal model transformations at this time, because these are applied when the image is queried
+        transform = transforms.Compose([transforms.ToTensor()])
+        validation_set.transform = transform
 
         return super().validate(model, validation_set)
 
