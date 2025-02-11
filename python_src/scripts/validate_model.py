@@ -59,3 +59,4 @@ if __name__ == "__main__":
     print(f"Validator class: {class_val}")
     print(f"Validator class: {val_percent}")
 
+
