@@ -9,6 +9,7 @@ from transferwareai.models.adt import Model
 from transferwareai.models.construct import get_abstract_factory
 from transferwareai.data.dataset import CacheDataset, ApiCache
 from transferwareai.config import settings
+from transferwareai.data.split_images import split
 
 
 class TrainingJob:
@@ -68,7 +69,15 @@ class TrainingJob:
             logging.info("Subsetting dataset")
             api.subset(settings.training.subset_n, settings.training.val_ids)
 
+        if settings.training.split_images:
+            logging.info("Splitting training images")
+            self._split_training_images(api, settings.training.horizontal_split,
+                                        settings.training.vertical_split, settings.training.split_tag)
+
         return CacheDataset(api, skip_ids=settings.training.skip_ids)
+
+    def _split_training_images(self, api_dataset, rows, cols, tag):
+        split(api_dataset, rows, cols, tag)
 
     def _get_valid_ds(self) -> ImageFolder:
         res_path = Path(settings.training.validation_dir)
