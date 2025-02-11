@@ -12,6 +12,7 @@ from transferwareai.config import settings
 from transferwareai.data.split_images import split
 
 
+
 class TrainingJob:
     """Simple wrapper class over the training pipeline."""
 
