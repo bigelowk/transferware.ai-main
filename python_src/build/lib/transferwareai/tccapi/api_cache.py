@@ -262,3 +262,15 @@ class ApiCache:
         return self._df.select(pl.col("url").where(pl.col("id") == pattern_id))["url"][
             0
         ]
+
+    # subset the cache for training purposes - does not return anything
+    def subset(self, n, val_ids):
+        # find the validation patterns (set these in the settings file)
+        keep = self._df.filter(pl.col("id").is_in(val_ids or []))
+        # take a random sample of the patterns (seed is set so that the same sample is taken each time)
+        df = self._df.sample(n, seed=314)
+        new = pl.concat([df, keep]).unique()
+        self._set_df(new)
+
+    def _set_df(self, df):
+        self._df = df

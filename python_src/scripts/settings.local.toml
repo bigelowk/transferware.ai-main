@@ -17,7 +17,7 @@ early_stopping_thresh = 3
 # Num images loaded per step in epoch
 batch_size = 9
 # The directory the cache and model resources will be written to
-resource_dir = "./scratch" # TODO change for prod
+resource_dir = "../scratch" # TODO change for prod
 # Validation directory. Should contain folders of pattern ids with images in them.
 validation_dir = "../scratch/val" # TODO change for prod
 # URL to connect to API for upadates
@@ -25,15 +25,22 @@ api_url = "http://0.0.0.0:8080"
 # IDs to skip when training the model. Use when training errors due to corrupted image files.
 skip_ids = [67001]
 # Least acceptible validation percent that will still deploy the model
-validation_threshold = 0.7 # TODO change for prod
+validation_threshold = 0.2 # TODO change for prod
 # Updates index only when updating, rather than retraining the model entirely
 update_index_only = false
+# Takes a subset of the patterns to train on
+subset = true
+# The size of the subset to take
+subset_n = 2000
+# IDs of the validation images that should also be included in the subset -- these are the cache ids, NOT tcc pattern ids
+val_ids = [47293, 47312, 49403, 50161, 52332, 52463, 54131, 54656, 54727, 56311,
+            56654, 58325, 59211, 60598, 60615, 62913, 66668, 68326, 74386, 77920, 185592]
 
 # Settings for the query api
 [query]
 torch_device = "cpu"
 # The directory the cache and model resources will be read from, and written to on update
-resource_dir = "./scratch" # TODO change for prod
+resource_dir = "../scratch" # TODO change for prod
 # Number of results to get from the model
 top_k = 10
 # Server settings

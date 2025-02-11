@@ -63,6 +63,11 @@ class TrainingJob:
         api = ApiCache.from_cache(
             res_path.joinpath("cache"), no_update=not update_cache
         )
+
+        if settings.training.subset:
+            logging.info("Subsetting dataset")
+            api.subset(settings.training.subset_n, settings.training.val_ids)
+
         return CacheDataset(api, skip_ids=settings.training.skip_ids)
 
     def _get_valid_ds(self) -> ImageFolder:
