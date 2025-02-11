@@ -35,7 +35,14 @@ subset_n = 2000
 # IDs of the validation images that should also be included in the subset -- these are the cache ids, NOT tcc pattern ids
 val_ids = [47293, 47312, 49403, 50161, 52332, 52463, 54131, 54656, 54727, 56311,
             56654, 58325, 59211, 60598, 60615, 62913, 66668, 68326, 74386, 77920, 185592]
-
+# When training, split the images into smaller pieces
+split_images = false
+# The image tag to split into pieces. Usually pattern, can be border, center, or any other tag
+split_tag = "pattern"
+# The number of horizontal rows to split the pattern into
+horizontal_split = 2
+# The number of vertical columns to split the pattern into
+vertical_split = 2
 
 # Settings for the query api
 [query]

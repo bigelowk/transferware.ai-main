@@ -31,7 +31,7 @@ update_index_only = false
 # Takes a subset of the patterns to train on
 subset = true
 # The size of the subset to take
-subset_n = 1
+subset_n = 2000
 # IDs of the validation images that should also be included in the subset -- these are the cache ids, NOT tcc pattern ids
 val_ids = [47293, 47312, 49403, 50161, 52332, 52463, 54131, 54656, 54727, 56311,
             56654, 58325, 59211, 60598, 60615, 62913, 66668, 68326, 74386, 77920, 185592]
