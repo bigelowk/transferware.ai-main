@@ -3,8 +3,8 @@ services:
   query_api:
     build:
       dockerfile: query_api.dockerfile
-    #ports:
-    #  - "8080"
+    ports:
+      - "8080/tcp"
     volumes:
       - ./python_src/scratch:/python_src/scratch # TODO match your system, this is the resource dir
     environment:
@@ -25,8 +25,8 @@ services:
   static_site:
     build:
       dockerfile: static_site.dockerfile
-    #ports:
-    #  - "8080"
+    ports:
+      - "8080/tcp"
     deploy:
       replicas: 2
     depends_on:
@@ -39,7 +39,7 @@ services:
     hostname: broker
     image: eclipse-mosquitto
     ports:
-      - "1883"
+      - "1883/tcp"
     volumes:
       - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
     depends_on:
