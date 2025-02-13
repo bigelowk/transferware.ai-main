@@ -130,7 +130,7 @@ class ApiCache:
     @staticmethod
     def _requires_update(cache_file: Path) -> bool:
         if cache_file.exists():
-            df = pl.read_json(cache_file)
+            df = pl.read_json(cache_file, infer_schema_length=10000)
             max_id_cache = df["id"].max()
             max_id_now = ApiCache.get_api_page(1)[0]["id"]
 

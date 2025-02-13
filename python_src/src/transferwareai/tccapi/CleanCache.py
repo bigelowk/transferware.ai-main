@@ -41,7 +41,7 @@ def clean_cache(filename):
 
 if __name__ == "__main__":
 
-    cache_file = "cache.json"
+    cache_file = "python_src/scratch/cache/cache.json"
     clean_cache(cache_file)
 
     cache = pl.read_json(cache_file)
