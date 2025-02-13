@@ -6,6 +6,10 @@ WORKDIR python_src
 
 # Install python
 RUN apt update && apt install python3 python3-pip -y
+#RUN apt-get update --allow-insecure-repositories || true && \
+#    apt-get install -y --no-install-recommends curl gnupg ca-certificates && \
+#    apt-get clean \
+#    apt install python3 python3-pip -y
 
 # Install deps
 RUN pip3 install -r ./requirements.txt
