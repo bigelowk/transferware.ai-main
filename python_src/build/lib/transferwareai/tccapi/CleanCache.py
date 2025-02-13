@@ -28,7 +28,7 @@ def clean_cache(filename):
 
     # remove records for maker -- these are not records for specific patterns but rater just a singular makers mark
     df_only_necessary_columns = df[['id', 'url', 'name', 'pattern_number', 'title', 'alternate_names',
-                                    'category', 'border', 'makers', 'marks', 'images', 'features']]
+                                    'category', 'images']]
 
 
     json_str = df_only_necessary_columns.to_json(orient='records', indent=2)

@@ -27,7 +27,7 @@ def clean_cache(filename):
 
     # only take the columns that are necessary for analysis
     df_only_necessary_columns = df[['id', 'url', 'name', 'pattern_number', 'title', 'alternate_names',
-                                    'category', 'border', 'makers', 'marks', 'images', 'features']]
+                                    'category', 'images']]
 
 
     json_str = df_only_necessary_columns.to_json(orient='records', indent=2)
