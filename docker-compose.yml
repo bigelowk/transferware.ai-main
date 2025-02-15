@@ -6,7 +6,7 @@ services:
     #ports:
     #  - "8080/tcp"
     volumes:
-      - ./python_src/scratch:/python_src/scratch # TODO match your system, this is the resource dir
+      - ./python_src/scratch:/python_src/scratch:z # TODO match your system, this is the resource dir
     environment:
       - "TRANSFERWARE_QUERY.TORCH_DEVICE=cpu" # TODO with the nvidia runtime this can be cuda
     deploy:
@@ -41,7 +41,7 @@ services:
     ports:
       - "1883/tcp"
     volumes:
-      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf:z
     depends_on:
       - balancer
     labels:
@@ -56,5 +56,5 @@ services:
       # The Web UI (enabled by --api.insecure=true)
       - "8080:8080"
     volumes:
-      - ./traefik.yml:/etc/traefik/traefik.yml
-      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik.yml:/etc/traefik/traefik.yml:z
+      - /var/run/docker.sock:/var/run/docker.sock:z
