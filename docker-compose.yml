@@ -40,7 +40,7 @@ services:
     hostname: broker
     image: eclipse-mosquitto
     ports:
-      - "1883/tcp"
+      - "1883"
     volumes:
       - mosquitto_conf:/mosquitto/config/mosquitto.conf
     depends_on:
