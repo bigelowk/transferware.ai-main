@@ -6,12 +6,7 @@ services:
     #ports:
     #  - "8080/tcp"
     volumes:
-      query_api_data:
-        driver: local
       #- ./python_src/scratch:/python_src/scratch # TODO match your system, this is the resource dir
-    services:
-      query_api:
-      volumes:
         - query_api_data:/python_src/scratch
     environment:
       - "TRANSFERWARE_QUERY.TORCH_DEVICE=cpu" # TODO with the nvidia runtime this can be cuda
@@ -47,7 +42,7 @@ services:
     ports:
       - "1883/tcp"
     volumes:
-      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - mosquitto_conf:/mosquitto/config/mosquitto.conf
     depends_on:
       - balancer
     labels:
