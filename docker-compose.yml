@@ -7,7 +7,7 @@ services:
     #  - "8080/tcp"
     volumes:
       #- ./python_src/scratch:/python_src/scratch # TODO match your system, this is the resource dir
-        - /var/transferware.ai-main/python_src/scartch:/python_src/scratch
+        - /var/transferware.ai-main/python_src/scratch:/python_src/scratch
     user: root #temporary
     environment:
       - "TRANSFERWARE_QUERY.TORCH_DEVICE=cpu" # TODO with the nvidia runtime this can be cuda
