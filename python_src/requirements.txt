@@ -16,12 +16,13 @@ black[d]
 dynaconf
 
 polars
+pandas # for cleaning cache
 requests
 
 aiomqtt
 aiohttp
 aiofile
-#uvloop
+#uvloop   -- this was not used by the original team
 
 pytest
 tensorboard

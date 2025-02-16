@@ -3,15 +3,15 @@
 # Abstract factory used
 model_implimentation = "ZhaoModelFactory"
 # Changes wether the cache will be automatically updated. Use for debugging
-update_cache = false
+update_cache = true
 # Token used for controling access to query api
 access_token = "CHANGE ME" # TODO change for prod
 
 # Settings for the training script
 [training]
-torch_device = "cuda"
+torch_device = "cpu"
 # Num epochs to train
-epochs = 30
+epochs = 15
 # Number of epochs val loss worsens before we early stop
 early_stopping_thresh = 3
 # Num images loaded per step in epoch
@@ -21,7 +21,7 @@ resource_dir = "../scratch" # TODO change for prod
 # Validation directory. Should contain folders of pattern ids with images in them.
 validation_dir = "../scratch/val" # TODO change for prod
 # URL to connect to API for upadates
-api_url = "http://localhost:8080"
+api_url = "http://0.0.0.0:8080"
 # IDs to skip when training the model. Use when training errors due to corrupted image files.
 skip_ids = [67001]
 # Least acceptible validation percent that will still deploy the model
@@ -31,13 +31,13 @@ update_index_only = false
 
 # Settings for the query api
 [query]
-torch_device = "cuda"
+torch_device = "cpu"
 # The directory the cache and model resources will be read from, and written to on update
 resource_dir = "../scratch" # TODO change for prod
 # Number of results to get from the model
 top_k = 10
 # Server settings
-host = "localhost"
+host = "0.0.0.0"
 port = 8080
 # Number of server processes to spawn. Each will load the model, so watch VRAM. Allows for horizontal scaling.
 workers = 1

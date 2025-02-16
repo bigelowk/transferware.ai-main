@@ -3,14 +3,15 @@ services:
   query_api:
     build:
       dockerfile: query_api.dockerfile
-    ports:
-      - "8080"
+    #ports:
+    #  - "8080/tcp"
     volumes:
-      - ./python_src/scratch:/python_src/scratch # TODO match your system, this is the resource dir
+      #- ./python_src/scratch:/python_src/scratch # TODO match your system, this is the resource dir
+        - query_api_data:/python_src/scratch
     environment:
       - "TRANSFERWARE_QUERY.TORCH_DEVICE=cpu" # TODO with the nvidia runtime this can be cuda
     deploy:
-      replicas: 1
+      replicas: 2
     depends_on:
       - balancer
       - broker
@@ -25,10 +26,10 @@ services:
   static_site:
     build:
       dockerfile: static_site.dockerfile
-    ports:
-      - "8080"
+    #ports:
+    #  - "8080/tcp"
     deploy:
-      replicas: 1
+      replicas: 2
     depends_on:
       - balancer
     labels:
@@ -41,7 +42,7 @@ services:
     ports:
       - "1883"
     volumes:
-      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - mosquitto_conf:/mosquitto/config/mosquitto.conf
     depends_on:
       - balancer
     labels:
