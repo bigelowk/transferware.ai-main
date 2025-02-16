@@ -72,13 +72,12 @@ class TrainingJob:
 
         if settings.training.split_images:
             logging.info("Splitting training images")
-            self._split_training_images(api, settings.training.horizontal_split,
-                                        settings.training.vertical_split, settings.training.split_tag)
+            self._split_training_images(api, settings.training.split_specifications)
 
         return CacheDataset(api, skip_ids=settings.training.skip_ids)
 
-    def _split_training_images(self, api_dataset, rows, cols, tag):
-        split(api_dataset, rows, cols, tag)
+    def _split_training_images(self, api_dataset: ApiCache, specs: list):
+        split(api_dataset, specs)
 
     def _get_valid_ds(self) -> ImageFolder:
         res_path = Path(settings.training.validation_dir)

@@ -9,40 +9,40 @@ from transferwareai.tccapi.api_cache import ApiCache
 import logging
 
 
-def split(api, rows = 2, cols = 2, tag = 'pattern'):
-    """Splits the image, given the pattern id and image tag, into h_split rows and v_split columns"""
-
-
-    # Number of pieces Horizontally
-    W_SIZE = rows
-    # Number of pieces Vertically to each Horizontal
-    H_SIZE = cols
+def split(api, specs: list = [['pattern', 2, 2]]):
+    """Splits an image corresponding to the image tag into the rows and columns. Does this for all the images in the
+    given api dataset"""
 
     # for all the images in the api, split them into pieces
     for id in api.as_df()["id"]:
-        img_path = api.get_image_file_path_for_tag(id, tag)
-        img = cv2.imread(str(img_path))
+        for i in range(len(specs)):
+            tag = specs[i][0]
+            img_path = api.get_image_file_path_for_tag(id, tag)
+            img = cv2.imread(str(img_path))
 
-        # if an image with the given tag does not exist, skip it
-        if img is not None:
-            img_folder = api.get_image_path_for_id(id)
-            height, width, channels = img.shape
+            # check if an image with the given tag exists, if not then don't execute this code chunk
+            if img is not None:
+                img_folder = api.get_image_path_for_id(id)
+                height, width, channels = img.shape
 
-            # image splitting code below is adapted from: https://www.tutorialspoint.com/dividing-images-into-equal-parts-using-opencv-python
-            for row in range(H_SIZE):
-                for col in range(W_SIZE):
-                    x = width / W_SIZE * col
-                    y = height / H_SIZE * row
-                    h = (height / H_SIZE)
-                    w = (width / W_SIZE)
+                # image splitting code below is adapted from: https://www.tutorialspoint.com/dividing-images-into-equal-parts-using-opencv-python
+                H_SIZE = specs[i][1]
+                W_SIZE = specs[i][2]
 
-                    temp_img = img[int(y):int(y + h), int(x):int(x + w)]
+                for row in range(H_SIZE):
+                    for col in range(W_SIZE):
+                        x = width / W_SIZE * col
+                        y = height / H_SIZE * row
+                        h = (height / H_SIZE)
+                        w = (width / W_SIZE)
 
-                    # write the image to the folder if one does not already exist
-                    # to keep these folders from getting too messy, this splitting should only happen once
-                    # if it is to be repeated, delete the asset files and redownload them to set them back to default
-                    temp_img_path = img_folder.joinpath(f"{id}-{tag}-row{row}-col{col}.jpg")
-                    cv2.imwrite(temp_img_path, temp_img)
+                        temp_img = img[int(y):int(y + h), int(x):int(x + w)]
+
+                        # write the image to the folder if one does not already exist
+                        # to keep these folders from getting too messy, this splitting should only happen once
+                        # if it is to be repeated, delete the asset files and redownload them to set them back to default
+                        temp_img_path = img_folder.joinpath(f"{id}-{tag}-row{row}-col{col}.jpg")
+                        cv2.imwrite(temp_img_path, temp_img)
 
 if __name__ == '__main__':
 
@@ -56,6 +56,6 @@ if __name__ == '__main__':
         val_ids = [47293]
         api.subset(0, val_ids)
 
-    split(api, 2, 2, 'pattern')
+    split(api, [['pattern', 2, 2], ['border', 1, 2]])
 
 
