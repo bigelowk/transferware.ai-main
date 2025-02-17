@@ -6,8 +6,7 @@ services:
     #ports:
     #  - "8080/tcp"
     volumes:
-      #- ./python_src/scratch:/python_src/scratch # TODO match your system, this is the resource dir
-        - /var/transferware.ai-main/python_src/scratch:/python_src/scratch
+        - /var/transferware.ai-main/python_src/scratch:/python_src/scratch #TODO match with your system
     user: root #temporary
     environment:
       - "TRANSFERWARE_QUERY.TORCH_DEVICE=cpu" # TODO with the nvidia runtime this can be cuda
@@ -17,11 +16,18 @@ services:
       - balancer
       - broker
     labels:
+      - "traefik.enable=true"
+      # Entry point HTTPS
+      - "traefik.http.routers.query-api.entrypoints=websecure"
+      # Enable TLS
+      - "traefik.http.routers.query-api.tls=true"
+      - "traefik.http.routers.query-api.tls.certresolver=default"
       # Strip /api as the python server serves on root
       - "traefik.http.middlewares.strip-api.stripprefix.prefixes=/api"
       # Namespace query api on /api to allow static site on root
-      - traefik.http.routers.query-api.rule=PathPrefix(`/api`)
-      - traefik.http.routers.query-api.middlewares=strip-api
+      - "traefik.http.routers.query-api.rule=Host('transferware-ai.umd.umich.edu') && PathPrefix(`/api`)"
+      - "traefik.http.routers.query-api.middlewares=strip-api"
+      - "traefik.http.services.query-api.loadbalancer.server.port=8000"
 
   # Serves the frontend
   static_site:
@@ -34,8 +40,11 @@ services:
     depends_on:
       - balancer
     labels:
-      - "traefik.http.routers.static-site.rule=PathPrefix(`/`) && !PathPrefix(`/api`)"
-
+      - "traefik.enable=true"
+      - "traefik.http.routers.static-site.rule=Host('transferware-ai.umd.umich.edu') && PathPrefix(`/`) && !PathPrefix(`/api`)"
+      - "traefik.http.routers.static-site.entrypoints=websecure"
+      - "traefik.http.routers.static-site.tls=true"
+      - "traefik.http.routers.static-site.tls.certresolver=default"
   # MQTT broker
   broker:
     hostname: broker
@@ -56,9 +65,13 @@ services:
     ports:
       # Our application
       - "80:80"
+      # HTTPS support
+      - "443:443"
       # The Web UI (enabled by --api.insecure=true)
       - "8080:8080"
     volumes:
       - /var/transferware.ai-main/traefik.yml:/etc/traefik/traefik.yml
       - /var/run/docker.sock:/var/run/docker.sock
+      - /var/transferware.ai-main/cert.crt:/etc/traefik/cert.crt
+      - /var/transferware.ai-main/cert.key:/etc/traefik/cert.key
     user: root #temporary
