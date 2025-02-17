@@ -71,7 +71,7 @@ services:
       - "8080:8080"
     volumes:
       - /var/transferware.ai-main/traefik.yml:/etc/traefik/traefik.yml
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /run/podman/podman.sock:/var/run/docker.sock
       - /var/transferware.ai-main/cert.crt:/etc/traefik/cert.crt
       - /var/transferware.ai-main/cert.key:/etc/traefik/cert.key
     user: root #temporary
