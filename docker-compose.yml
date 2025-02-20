@@ -18,14 +18,13 @@ services:
     labels:
       - "traefik.enable=true"
       # Entry point HTTPS
+      - "traefik.http.routers.query-api.rule=Host(`transferware-ai.umd.umich.edu`) && PathPrefix(`/api`)"
       - "traefik.http.routers.query-api.entrypoints=websecure"
       # Enable TLS
       - "traefik.http.routers.query-api.tls=true"
-      - "traefik.http.routers.query-api.tls.certresolver=default"
       # Strip /api as the python server serves on root
       - "traefik.http.middlewares.strip-api.stripprefix.prefixes=/api"
       # Namespace query api on /api to allow static site on root
-      - "traefik.http.routers.query-api.rule=Host('transferware-ai.umd.umich.edu') && PathPrefix(`/api`)"
       - "traefik.http.routers.query-api.middlewares=strip-api"
       - "traefik.http.services.query-api.loadbalancer.server.port=8000"
 
@@ -41,10 +40,10 @@ services:
       - balancer
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.static-site.rule=Host('transferware-ai.umd.umich.edu') && PathPrefix(`/`) && !PathPrefix(`/api`)"
+      - "traefik.http.routers.static-site.rule=Host(`transferware-ai.umd.umich.edu`) && PathPrefix(`/`) && !PathPrefix(`/api`)"
       - "traefik.http.routers.static-site.entrypoints=websecure"
       - "traefik.http.routers.static-site.tls=true"
-      - "traefik.http.routers.static-site.tls.certresolver=default"
+
   # MQTT broker
   broker:
     hostname: broker
@@ -72,6 +71,6 @@ services:
     volumes:
       - /var/transferware.ai-main/traefik.yml:/etc/traefik/traefik.yml
       - /var/run/docker.sock:/var/run/docker.sock
-      - /var/transferware.ai-main/cert.crt:/etc/traefik/cert.crt
-      - /var/transferware.ai-main/cert.key:/etc/traefik/cert.key
+      - /etc/letsencrypt/live/transferware-ai.umd.umich.edu/fullchain.pem:/etc/traefik/fullchain.pem:ro
+      - /etc/letsencrypt/live/transferware-ai.umd.umich.edu/privkey.pem:/etc/traefik/privkey.pem:ro
     user: root #temporary
