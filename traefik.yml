@@ -18,8 +18,8 @@ entryPoints:
 
 tls:
   certificates: 
-    - certFile: "/etc/traefik/fullchain.pem"
-      keyFile: "/etc/traefik/privkey.pem"
+    - certFile: "/etc/letsencrypt/live/transferware-ai.umd.umich.edu/fullchain.pem"
+      keyFile: "/etc/letsencrypt/live/transferware-ai.umd.umich.edu/privkey.pem"
 
 # API and dashboard configuration
 api:
