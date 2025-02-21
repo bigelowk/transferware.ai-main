@@ -11,7 +11,7 @@ access_token = "CHANGE ME" # TODO change for prod
 [training]
 torch_device = "cpu"
 # Num epochs to train
-epochs = 15
+epochs = 25
 # Number of epochs val loss worsens before we early stop
 early_stopping_thresh = 3
 # Num images loaded per step in epoch
@@ -27,18 +27,18 @@ skip_ids = [67001]
 # Least acceptible validation percent that will still deploy the model
 validation_threshold = 0.1 # TODO change for prod
 # Updates index only when updating, rather than retraining the model entirely
-update_index_only = false
+update_index_only = true
 # Takes a subset of the patterns to train on
-subset = true
+subset = false
 # The size of the subset to take -- the subset has a seed so it will take the same images every time
 subset_n = 2000
 # IDs of the validation images that should also be included in the subset -- these are the cache ids, NOT tcc pattern ids
 val_ids = [47293, 47312, 49403, 50161, 52332, 52463, 54131, 54656, 54727, 56311,
             56654, 58325, 59211, 60598, 60615, 62913, 66668, 68326, 74386, 77920, 185592]
 # When training, split the images into smaller pieces
-split_images = true
+split_images = false
 # The image tag to split and how many rows and columns to split it into. Formatted as a nested list: [['tag', rows, cols], ...]
-split_specifications = [['pattern', 2, 2], ['border', 1, 3]]
+split_specifications = [['pattern', 2, 2]]
 
 
 # Settings for the query api
