@@ -17,6 +17,14 @@ entryPoints:
     address: ":443"
 
 tls:
+  certificates:
+    - certFile: "/etc/traefik/fullchain.pem"
+      keyFile: "/etc/traefik/fullchain.pem"
+
+  options:
+    default:
+      minVersion: "TLSv1.2"
+      
   stores:
     default:
       defaultCertificate:
