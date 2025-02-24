@@ -5,11 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="39ecd907-e2df-44e5-b8c0-5387b4a2c282" name="Changes" comment="update clean cache">
-      <change beforePath="$PROJECT_DIR$/build/lib/transferwareai/data/split_images.py" beforeDir="false" afterPath="$PROJECT_DIR$/build/lib/transferwareai/data/split_images.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/transferwareai/training_job.py" beforeDir="false" afterPath="$PROJECT_DIR$/build/lib/transferwareai/training_job.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/settings.local.toml" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/settings.local.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/transferwareai/data/split_images.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/transferwareai/data/split_images.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/transferwareai/training_job.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/transferwareai/training_job.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,7 +70,7 @@
     "Python.validation_test (1).executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "WorkingLocal",
+    "git-widget-placeholder": "main",
     "last_opened_file_path": "C:/Users/kappa/Documents/TWAI/transferware.ai-main/transferware.ai-main/python_src/.venv/Lib/site-packages/transferwareai/data",
     "settings.editor.selected.configurable": "preferences.lookFeel"
   }
@@ -461,11 +457,6 @@
           <url>file://$PROJECT_DIR$/.venv/Lib/site-packages/transferwareai/models/generic.py</url>
           <line>30</line>
           <option name="timeStamp" value="41" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/.venv/Lib/site-packages/transferwareai/models/zhaomodel.py</url>
-          <line>487</line>
-          <option name="timeStamp" value="43" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/src/transferwareai/training_job.py</url>
