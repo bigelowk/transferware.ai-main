@@ -63,52 +63,12 @@ const MatchResults = () => {
           </a>
         ))}
       </div>
-      <div>
-        <button
-          id="surveyButton"
-          className="bg-black text-white font-semibold px-4 py-2 rounded-md"
-          disabled={false} // Modify logic based on conditions
-        >
-          Survey
-        </button>
+      <div className="flex items-center lg:p-4">
+        <a href="/survey">Survey</a>
+      
       </div>
 
-      {/* Modal */}
-      <div id="myModal" className="modal">
-        <div className="modal-content">
-          <h1>Feedback Survey</h1>
-          <label htmlFor="name">Name:</label>
-          <input type="text" id="name" name="name" placeholder="Enter your name" required />
-
-          <label htmlFor="email">Email:</label>
-          <input type="text" id="email" name="email" placeholder="Enter your email" required />
-
-          <label htmlFor="sherd-name">
-            Please provide the name of the ceramic sherd you submitted:
-          </label>
-          <input type="text" id="sherd-name" name="sherd-name" placeholder="Sherd name" required />
-
-          <label htmlFor="sherd-portion">Which portion of the sherd did you submit?</label>
-          <select id="sherd-portion" name="sherd-portion" required>
-            <option value="">Select</option>
-            <option value="Border">Border</option>
-            <option value="Maker's Mark">Maker's Mark</option>
-            <option value="Center Design">Center Design</option>
-            <option value="Other">Other</option>
-          </select>
-          <textarea id="other-description" name="other-description" rows="2" placeholder="If 'Other', please describe..." style={{ display: "none" }}></textarea>
-
-          <label htmlFor="pattern-found">
-            Did you find the pattern you were looking for in the results? What number is it?
-          </label>
-          <input type="text" id="pattern-found" name="pattern-found" placeholder="Enter pattern number" required />
-
-          <label htmlFor="general-feedback">General Feedback:</label>
-          <textarea id="general-feedback" name="general-feedback" rows="4" placeholder="Enter your feedback" required></textarea>
-
-          <button onClick={submitSurvey}>Submit</button>
-        </div>
-      </div>
+    
     </div>
   );
 };
