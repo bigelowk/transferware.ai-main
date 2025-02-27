@@ -1,92 +1,45 @@
-import React, { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import React from "react";
+import { useLocation } from "react-router-dom"; // Import useLocation
 import MatchResults from "../components/matchResults";
 import Footer from "../components/footer";
 
 function ViewMatches() {
-  const location = useLocation();
-  const { imagePreviewUrl } = location.state || {};
-
-  // ✅ Moved submitSurvey function from MatchResults.js
-  const submitSurvey = () => {
-    alert("Survey submitted! Thank you.");
-    const modal = document.getElementById("myModal");
-    if (modal) modal.style.display = "none";
-  };
-
-  // ✅ Add event listeners for modal behavior
-  useEffect(() => {
-    const modal = document.getElementById("myModal");
-    const btn = document.getElementById("surveyButton");
-    const span = document.getElementsByClassName("close")[0];
-
-    if (btn) {
-      btn.onclick = function () {
-        if (modal) modal.style.display = "block";
-      };
-    }
-
-    if (span) {
-      span.onclick = function () {
-        if (modal) modal.style.display = "none";
-      };
-    }
-
-    window.onclick = function (event) {
-      if (modal && event.target === modal) {
-        modal.style.display = "none";
-      }
-    };
-  }, []);
+  const location = useLocation(); // Retrieve location object
+  const { imagePreviewUrl } = location.state || {}; // Destructure imagePreviewUrl from state, defaulting to an empty object if state is undefined
 
   return (
     <div>
-      {/* Image Preview Section */}
       <div className="flex flex-col xl:flex-row">
         {imagePreviewUrl ? (
           <div className="flex items-start justify-center p-12 bg-zinc-900">
             <div className="flex flex-col items-center">
-              <div className="mb-4 p-6">
-                <h1 className="font-semibold text-white text-2xl font-serif">
+              <div className=" mb-4 p-6">
+                <h1 className="font-semibold text-white text-2xl font-serif ">
                   Your Match Results
                 </h1>
-                <hr className="rounded w-1/2 h-1 my-4 border-0 bg-amber-600" />
+                <hr className="rounded w-1/2 h-1  my-4 border-0 rounded bg-amber-600"></hr>
                 <p className="text-white font-serif">
                   These are transferware pieces from our database that look
                   similar to the sherd that you attached. The lower the
                   confidence number is, the closer of a match the pattern is.
-                  Navigate to the TCC website URL to get more information on
+                  Navigative to the TCC website url to get more information on
                   each pattern.
                 </p>
-                <hr className="rounded w-1/2 h-1 my-4 border-0 bg-amber-600" />
-                <p className="text-white font-serif">
-                  The confidence value is the percentage of similarity between
-                  the submitted image and the resulting patterns. A percentage
-                  of 100% means it is a perfect match.
-                </p>
-                <hr className="rounded w-1/2 h-1 my-4 border-0 bg-amber-600" />
               </div>
-              <img className="max-w-80" src={imagePreviewUrl} alt="Uploaded Preview" />
-              <div className="flex items-center justify-center p-4">
-                <button
-                  id="surveyButton"
-                  onClick={submitSurvey}
-                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">
-                  Submit Survey
-                </button>
-              </div>
+              <img
+                className="max-w-80"
+                src={imagePreviewUrl}
+                alt="Uploaded Preview"
+              />
             </div>
           </div>
         ) : (
           <p>No image preview available</p>
         )}
-
-        {/* Match Results Component */}
         <div className="flex1 justify-center items-center overflow-y-auto">
           <MatchResults />
         </div>
       </div>
-
       <Footer />
     </div>
   );
