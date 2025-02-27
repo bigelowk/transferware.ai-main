@@ -1,6 +1,7 @@
 # Docker configuration backend
 providers:
   docker:
+    {}
     watch: true
 
 entryPoints:
