@@ -2,7 +2,6 @@
 providers:
   docker:
     {}
-    watch: true
 
 entryPoints:
   # Redirect HTTP to HTTPS
