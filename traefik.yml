@@ -19,9 +19,11 @@ entryPoints:
       tls: {}
 
 tls:
-  certificates:
-    - certFile: "/etc/traefik/fullchain.pem"
-      keyFile: "/etc/traefik/privkey.pem"
+  stores: 
+    default:
+      defaultCertificate:
+        certFile: "/etc/traefik/fullchain.pem"
+        keyFile: "/etc/traefik/privkey.pem"
 
 # API and dashboard configuration
 api:
