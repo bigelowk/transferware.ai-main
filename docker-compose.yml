@@ -9,7 +9,7 @@ services:
     environment:
       - "TRANSFERWARE_QUERY.TORCH_DEVICE=cpu" # TODO with the nvidia runtime this can be cuda
     deploy:
-      replicas: 1
+      replicas: 2
     depends_on:
       - balancer
       - broker
@@ -26,30 +26,15 @@ services:
   static_site:
     build:
       dockerfile: static_site.dockerfile
-    ports:
-      - "8080"
     deploy:
       replicas: 2
     depends_on:
       - balancer
-      - mongodb
     labels:
-      - "traefik.http.routers.static-site.rule=PathPrefix(`/`) && !PathPrefix(`/api`)"
-    environment:
-      - "MONGO_URI: mongodb://mongodb:27017/mydatabase"
-  mongodb:
-    image: mongo:7.0
-    container_name: mongo-container
-    restart: always
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo_data:/data/db
       - "traefik.enable=true"
       - "traefik.http.routers.static-site.rule=Host(`transferware-ai.umd.umich.edu`) && PathPrefix(`/`) && !PathPrefix(`/api`)"
       - "traefik.http.routers.static-site.entrypoints=websecure"
       - "traefik.http.routers.static-site.tls=true"
-
 
   # MQTT broker
   broker:
@@ -73,14 +58,8 @@ services:
       - "443:443"  # HTTPS
       - "8080:8080"  # Dashboard
     volumes:
-      - ./traefik.yml:/etc/traefik/traefik.yml
-      - /var/run/docker.sock:/var/run/docker.sock
-
-volumes:
-  mongo_data:   
       - /var/transferware.ai-main/traefik.yml:/etc/traefik/traefik.yml
       - /var/run/docker.sock:/var/run/docker.sock
       - /etc/letsencrypt/live/transferware-ai.umd.umich.edu/fullchain.pem:/etc/traefik/fullchain.pem:ro
       - /etc/letsencrypt/live/transferware-ai.umd.umich.edu/privkey.pem:/etc/traefik/privkey.pem:ro
     user: root #temporary
-

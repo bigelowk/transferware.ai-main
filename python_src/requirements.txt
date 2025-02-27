@@ -26,6 +26,3 @@ aiofile
 
 pytest
 tensorboard
-
-pymongo
-marshmallow
