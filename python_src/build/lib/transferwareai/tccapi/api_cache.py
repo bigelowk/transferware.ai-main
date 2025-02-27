@@ -130,7 +130,12 @@ class ApiCache:
     @staticmethod
     def _requires_update(cache_file: Path) -> bool:
         if cache_file.exists():
-            df = pl.read_json(cache_file, infer_schema_length=10000)
+
+            # Make sure that the cache is clean -- see CleanCache file for details
+            clean_cache(cache_file)
+            
+            df = pl.read_json(cache_file)
+
             max_id_cache = df["id"].max()
             max_id_now = ApiCache.get_api_page(1)[0]["id"]
 
@@ -162,7 +167,7 @@ class ApiCache:
                 buffer.write(json.dumps(patterns, indent=2))
 
         # Make sure that the cache is clean -- see CleanCache file for details
-        logging.info(f"Cleaning Cache")
+        logging.debug(f"Cleaning Cache")
         clean_cache(_cache_file)
 
         df = pl.read_json(_cache_file)
@@ -262,3 +267,15 @@ class ApiCache:
         return self._df.select(pl.col("url").where(pl.col("id") == pattern_id))["url"][
             0
         ]
+
+    # subset the cache for training purposes - does not return anything
+    def subset(self, n, val_ids):
+        # find the validation patterns (set these in the settings file)
+        keep = self._df.filter(pl.col("id").is_in(val_ids or []))
+        # take a random sample of the patterns (seed is set so that the same sample is taken each time)
+        df = self._df.sample(n, seed=314)
+        new = pl.concat([df, keep]).unique()
+        self._set_df(new)
+
+    def _set_df(self, df):
+        self._df = df

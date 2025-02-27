@@ -25,12 +25,13 @@ To solve these issues, we will only take the relevant selection of the columns.
 def clean_cache(filename):
     df = pd.read_json(filename)
 
-    # remove records for maker -- these are not records for specific patterns but rater just a singular makers mark
+    # only take the columns that are necessary for analysis
     df_only_necessary_columns = df[['id', 'url', 'name', 'pattern_number', 'title', 'alternate_names',
-                                    'category', 'border', 'makers', 'marks', 'images', 'features']]
+                                    'category', 'images']]
 
 
     json_str = df_only_necessary_columns.to_json(orient='records', indent=2)
+    # fix how python writes the urls
     json_str = json_str.replace(r'\/', '/')
 
     with open(filename, 'w') as file:
@@ -40,8 +41,12 @@ def clean_cache(filename):
 
 
 if __name__ == "__main__":
+    # clean the cache file without having to engage the training script
 
-    cache_file = "python_src/scratch/cache/cache.json"
+    # insert the cache file you want to clean. Should be in the same format as is what is created when the cache
+    # is created/updated in the training script
+    cache_file = "cache.json"
+
     clean_cache(cache_file)
 
     cache = pl.read_json(cache_file)
@@ -49,5 +54,4 @@ if __name__ == "__main__":
     # use this to look at what the data looks like
     test = cache.filter(pl.col("id") == 81193)
     print(test)
-    pass
 

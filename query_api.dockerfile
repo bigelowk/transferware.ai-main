@@ -21,6 +21,6 @@ RUN pip3 install --upgrade pip
 RUN pip3 install .
 
 WORKDIR scripts
-EXPOSE 8080:8080
+EXPOSE 8080
 # Run query api. Note that the settings file is compiled into container
 CMD ["python3", "query_api.py"]

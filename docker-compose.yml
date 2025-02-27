@@ -1,12 +1,11 @@
 services:
-  # Our replicated query apis
+  # Our replicated query APIs
   query_api:
     build:
       dockerfile: query_api.dockerfile
-    ports:
-      - "8080"
     volumes:
-      - ./python_src/scratch:/python_src/scratch # TODO match your system, this is the resource dir
+      - /var/transferware.ai-main/python_src/scratch:/python_src/scratch #TODO match with your system
+    user: root #temporary
     environment:
       - "TRANSFERWARE_QUERY.TORCH_DEVICE=cpu" # TODO with the nvidia runtime this can be cuda
     deploy:
@@ -15,11 +14,13 @@ services:
       - balancer
       - broker
     labels:
-      # Strip /api as the python server serves on root
+      - "traefik.enable=true"
+      - "traefik.http.routers.query-api.rule=Host(`transferware-ai.umd.umich.edu`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.query-api.entrypoints=websecure"
+      - "traefik.http.routers.query-api.tls=true"
       - "traefik.http.middlewares.strip-api.stripprefix.prefixes=/api"
-      # Namespace query api on /api to allow static site on root
-      - traefik.http.routers.query-api.rule=PathPrefix(`/api`)
-      - traefik.http.routers.query-api.middlewares=strip-api
+      - "traefik.http.routers.query-api.middlewares=strip-api"
+      - "traefik.http.services.query-api.loadbalancer.server.port=8080"
 
   # Serves the frontend
   static_site:
@@ -27,7 +28,6 @@ services:
       dockerfile: static_site.dockerfile
     ports:
       - "8080"
-     
     deploy:
       replicas: 2
     depends_on:
@@ -45,6 +45,12 @@ services:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
+      - "traefik.enable=true"
+      - "traefik.http.routers.static-site.rule=Host(`transferware-ai.umd.umich.edu`) && PathPrefix(`/`) && !PathPrefix(`/api`)"
+      - "traefik.http.routers.static-site.entrypoints=websecure"
+      - "traefik.http.routers.static-site.tls=true"
+
+
   # MQTT broker
   broker:
     hostname: broker
@@ -52,7 +58,8 @@ services:
     ports:
       - "1883"
     volumes:
-      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - /var/transferware.ai-main/mosquitto.conf:/mosquitto/config/mosquitto.conf
+    user: root #temporary
     depends_on:
       - balancer
     labels:
@@ -62,13 +69,18 @@ services:
   balancer:
     image: traefik
     ports:
-      # Our application
-      - "80:80"
-      # The Web UI (enabled by --api.insecure=true)
-      - "8080:8080"
+      - "80:80"  # HTTP
+      - "443:443"  # HTTPS
+      - "8080:8080"  # Dashboard
     volumes:
       - ./traefik.yml:/etc/traefik/traefik.yml
       - /var/run/docker.sock:/var/run/docker.sock
 
 volumes:
   mongo_data:   
+      - /var/transferware.ai-main/traefik.yml:/etc/traefik/traefik.yml
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/letsencrypt/live/transferware-ai.umd.umich.edu/fullchain.pem:/etc/traefik/fullchain.pem:ro
+      - /etc/letsencrypt/live/transferware-ai.umd.umich.edu/privkey.pem:/etc/traefik/privkey.pem:ro
+    user: root #temporary
+

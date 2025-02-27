@@ -130,132 +130,12 @@ class ApiCache:
     @staticmethod
     def _requires_update(cache_file: Path) -> bool:
         if cache_file.exists():
-            #pydf = json.load(cache_file)
-            #print(pydf.schema) 
-            #for col, dtype in pydf.schema.items():
-            #    print(f"{col}: {dtype}")
-            #df = pl.read_json(cache_file, infer_schema_length=10000)
-            schema = {
-                        "id": pl.Int64,
-                        "created": pl.Int64,
-                        "modified": pl.Int64,
-                        "url": pl.Utf8,
-                        "name": pl.Utf8,
-                        "pattern_number": pl.Float64,
-                        "title": pl.Utf8,
-                        "alternate_names": pl.Utf8,
-                        "category": pl.List(
-                            pl.Struct(
-                                {
-                                    "id": pl.Int64,
-                                    "created": pl.Int64,
-                                    "modified": pl.Int64,
-                                    "url": pl.Utf8,
-                                    "name": pl.Utf8,
-                                    "title": pl.Utf8,
-                                }
-                            )
-                        ),
-                        "border": pl.Struct(
-                            {
-                                "id": pl.Int64,
-                                "created": pl.Int64,
-                                "modified": pl.Int64,
-                                "url": pl.Utf8,
-                                "name": pl.Utf8,
-                                "title": pl.Utf8,
-                                "maker": pl.Utf8,
-                                "image": pl.Utf8,
-                            }
-                        ),
-                        "makers": pl.List(
-                            pl.Struct(
-                                {
-                                    "id": pl.Int64,
-                                    "created": pl.Int64,
-                                    "modified": pl.Int64,
-                                    "url": pl.Utf8,
-                                    "name": pl.Utf8,
-                                    "title": pl.Utf8,
-                                    "initials": pl.Utf8,
-                                    "place": pl.Utf8,
-                                    "region": pl.Utf8,
-                                    "year_start": pl.Utf8,
-                                    "year_end": pl.Utf8,
-                                }
-                            )
-                        ),
-                        "marks": pl.List(pl.Utf8),
-                        "rich_text": pl.Utf8,
-                        "publications": pl.List(pl.Utf8),
-                        "images": pl.List(
-                            pl.Struct(
-                                {
-                                    "created": pl.Int64,
-                                    "modified": pl.Int64,
-                                    "basename": pl.Utf8,
-                                    "url": pl.Utf8,
-                                    "width": pl.Int64,
-                                    "height": pl.Int64,
-                                    "filesize": pl.Int64,
-                                    "tags": pl.Utf8,
-                                }
-                            )
-                        ),
-                        "features": pl.List(
-                            pl.Struct(
-                                {
-                                    "id": pl.Int64,
-                                    "created": pl.Int64,
-                                    "modified": pl.Int64,
-                                    "url": pl.Utf8,
-                                    "name": pl.Utf8,
-                                    "title": pl.Utf8,
-                                }
-                            )
-                        ),
-                        "body_type": pl.Struct(
-                            {
-                                "id": pl.Int64,
-                                "created": pl.Int64,
-                                "modified": pl.Int64,
-                                "url": pl.Utf8,
-                                "name": pl.Utf8,
-                                "title": pl.Utf8,
-                            }
-                        ),
-                        "print_process": pl.Struct(
-                            {
-                                "id": pl.Int64,
-                                "created": pl.Int64,
-                                "modified": pl.Int64,
-                                "url": pl.Utf8,
-                                "name": pl.Utf8,
-                                "title": pl.Utf8,
-                            }
-                        ),
-                        "colors": pl.List(
-                            pl.Struct(
-                                {
-                                    "id": pl.Int64,
-                                    "created": pl.Int64,
-                                    "modified": pl.Int64,
-                                    "url": pl.Utf8,
-                                    "name": pl.Utf8,
-                                    "title": pl.Utf8,
-                                }
-                            )
-                        ),
-                        "prints": pl.List(pl.Utf8),
-                        "ceramics": pl.List(pl.Utf8),
-                    }
-            logging.info(cache_file.exists())
-            df = pl.read_json(cache_file,infer_schema_length = 10000)
-        
-            logging.info(df.schema)
-            #df = df.with_columns(pl.col("raw_json").str.json_decode())
-            for col, dtype in df.schema.items():
-                logging.info(f"{col}: {dtype}")
+
+            # Make sure that the cache is clean -- see CleanCache file for details
+            clean_cache(cache_file)
+            
+            df = pl.read_json(cache_file)
+
             max_id_cache = df["id"].max()
             max_id_now = ApiCache.get_api_page(1)[0]["id"]
 
@@ -287,7 +167,7 @@ class ApiCache:
                 buffer.write(json.dumps(patterns, indent=2))
 
         # Make sure that the cache is clean -- see CleanCache file for details
-        logging.info(f"Cleaning Cache")
+        logging.debug(f"Cleaning Cache")
         clean_cache(_cache_file)
 
         df = pl.read_json(_cache_file,infer_schema_length = 10000)
@@ -387,3 +267,15 @@ class ApiCache:
         return self._df.select(pl.col("url").where(pl.col("id") == pattern_id))["url"][
             0
         ]
+
+    # subset the cache for training purposes - does not return anything
+    def subset(self, n, val_ids):
+        # find the validation patterns (set these in the settings file)
+        keep = self._df.filter(pl.col("id").is_in(val_ids or []))
+        # take a random sample of the patterns (seed is set so that the same sample is taken each time)
+        df = self._df.sample(n, seed=314)
+        new = pl.concat([df, keep]).unique()
+        self._set_df(new)
+
+    def _set_df(self, df):
+        self._df = df
