@@ -3,22 +3,21 @@ import { useLocation } from "react-router-dom";
 import MatchResults from "../components/matchResults";
 import Footer from "../components/footer";
 
+
 function ViewMatches() {
   const location = useLocation();
   const { imagePreviewUrl } = location.state || {};
 
-  // ✅ Moved submitSurvey function from MatchResults.js
-  const submitSurvey = () => {
-    alert("Survey submitted! Thank you.");
-    const modal = document.getElementById("myModal");
-    if (modal) modal.style.display = "none";
+  // ✅ Redirect to Flask survey endpoint
+  /*const handleSurveyRedirect = () => {
+    window.location.href = "http://localhost:5000/survey"; // Adjust for production
   };
 
   // ✅ Add event listeners for modal behavior
   useEffect(() => {
     const modal = document.getElementById("myModal");
     const btn = document.getElementById("surveyButton");
-    const span = document.getElementsByClassName("close")[0];
+    const span = document.getElementsByClassName("close")[0]; */
 
     if (btn) {
       btn.onclick = function () {
@@ -70,9 +69,9 @@ function ViewMatches() {
               <div className="flex items-center justify-center p-4">
                 <button
                   id="surveyButton"
-                  onClick={submitSurvey}
+                  //onClick={handleSurveyRedirect}
                   className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">
-                  Submit Survey
+                  Beta Testing Survey
                 </button>
               </div>
             </div>
