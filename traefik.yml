@@ -15,19 +15,21 @@ entryPoints:
 
   websecure:
     address: ":443"
+    tls:
+      certificates:
+        - certFile: "/etc/traefik/fullchain.pem"
+          keyFile: "/etc/traefik/privkey.pem"
 
-tls:
-  certificates:
-    - certFile: "/etc/traefik/fullchain.pem"
-      keyFile: "/etc/traefik/privkey.pem"
-
-  stores:
-    default:
-      defaultCertificate:
-        certFile: "/etc/traefik/fullchain.pem"
-        keyFile: "/etc/traefik/privkey.pem"
+  #stores:
+   # default:
+    #  defaultCertificate:
+     #   certFile: "/etc/traefik/fullchain.pem"
+      #  keyFile: "/etc/traefik/privkey.pem"
 
 # API and dashboard configuration
 api:
   dashboard: true
   insecure: true
+
+log:
+  level: DEBUG
