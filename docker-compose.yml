@@ -71,8 +71,8 @@ services:
     volumes:
       - /var/transferware.ai-main/traefik.yml:/etc/traefik/traefik.yml
       - /var/run/docker.sock:/var/run/docker.sock
-      - /etc/letsencrypt/live/transferware-ai.umd.umich.edu/fullchain.pem:/etc/traefik/fullchain.pem:ro
-      - /etc/letsencrypt/live/transferware-ai.umd.umich.edu/privkey.pem:/etc/traefik/privkey.pem:ro
+      - /etc/letsencrypt/archive/transferware-ai.umd.umich.edu/fullchain1.pem:/etc/traefik/fullchain.pem:ro
+      - /etc/letsencrypt/archive/transferware-ai.umd.umich.edu/privkey1.pem:/etc/traefik/privkey.pem:ro
 
 
     user: root #temporary
