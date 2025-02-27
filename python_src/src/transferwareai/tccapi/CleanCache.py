@@ -41,12 +41,12 @@ def clean_cache(filename):
 
 
 if __name__ == "__main__":
-
     # clean the cache file without having to engage the training script
 
     # insert the cache file you want to clean. Should be in the same format as is what is created when the cache
     # is created/updated in the training script
     cache_file = "cache.json"
+
     clean_cache(cache_file)
 
     cache = pl.read_json(cache_file)

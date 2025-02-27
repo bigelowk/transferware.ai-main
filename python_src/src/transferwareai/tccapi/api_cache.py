@@ -135,6 +135,7 @@ class ApiCache:
             clean_cache(cache_file)
             
             df = pl.read_json(cache_file)
+
             max_id_cache = df["id"].max()
             max_id_now = ApiCache.get_api_page(1)[0]["id"]
 
@@ -169,7 +170,7 @@ class ApiCache:
         logging.debug(f"Cleaning Cache")
         clean_cache(_cache_file)
 
-        df = pl.read_json(_cache_file)
+        df = pl.read_json(_cache_file,infer_schema_length = 10000)
 
         logging.info(f"Loaded cache with {len(df)} patterns")
 

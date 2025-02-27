@@ -1,7 +1,7 @@
 .venv
 *.egg-info
 scratch
-
+venv
 
 node_modules
 package-lock.json
