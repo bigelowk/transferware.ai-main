@@ -21,10 +21,6 @@ tls:
     - certFile: "/etc/traefik/fullchain.pem"
       keyFile: "/etc/traefik/privkey.pem"
 
-  options:
-    default:
-      minVersion: "TLSv1.2"
-
   stores:
     default:
       defaultCertificate:
@@ -33,4 +29,5 @@ tls:
 
 # API and dashboard configuration
 api:
+  dashboard: true
   insecure: true
