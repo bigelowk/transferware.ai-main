@@ -3,6 +3,7 @@ from pathlib import Path
 
 from PIL.Image import Image
 from pydantic import BaseModel
+from typing import Any
 from torch import Tensor
 from dataclasses import dataclass
 
@@ -18,6 +19,10 @@ class ImageMatch(BaseModel):
     """Id of matching image"""
     confidence: float
     """Confidence metric of matching image. Could be 0-1, or a distance, depending on model."""
+
+    def model_post_init(self, __context: Any) -> None:
+        # change from angular distance to percentage similarity
+        self.confidence = (1 - (self.confidence / 2)) * 100
 
 
 class Model(ABC):
