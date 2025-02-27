@@ -1,38 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useData } from "../DataContext";
 
 const MatchResults = () => {
   const { data } = useData();
-
-  useEffect(() => {
-    const modal = document.getElementById("myModal");
-    const btn = document.getElementById("surveyButton");
-    const span = document.getElementsByClassName("close")[0];
-
-    if (btn) {
-      btn.onclick = function () {
-        if (modal) modal.style.display = "block";
-      };
-    }
-
-    if (span) {
-      span.onclick = function () {
-        if (modal) modal.style.display = "none";
-      };
-    }
-
-    window.onclick = function (event) {
-      if (modal && event.target === modal) {
-        modal.style.display = "none";
-      }
-    };
-  }, []); 
-
-  const submitSurvey = () => {
-    alert("Survey submitted! Thank you.");
-    const modal = document.getElementById("myModal");
-    if (modal) modal.style.display = "none";
-  };
 
   if (!data) return <p>No data available</p>;
 
@@ -63,16 +33,8 @@ const MatchResults = () => {
           </a>
         ))}
       </div>
-      <div className="flex items-center lg:p-4">
-        <a href="/survey">Survey</a>
-      
-      </div>
-
-    
     </div>
   );
 };
 
 export default MatchResults;
-
-
