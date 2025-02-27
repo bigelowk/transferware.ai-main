@@ -1,10 +1,10 @@
 # Docker configuration backend
 providers:
   docker:
-    { }
-    
+    watch: true
+
 entryPoints:
-  #Redirect HTTP to HTTPS
+  # Redirect HTTP to HTTPS
   web:
     address: ":80"
     http:
@@ -17,18 +17,11 @@ entryPoints:
     address: ":443"
     http:
       tls: {}
-    
-    
+
 tls:
   certificates:
     - certFile: "/etc/traefik/fullchain.pem"
       keyFile: "/etc/traefik/privkey.pem"
-
-  stores:
-    default:
-      defaultCertificate:
-        certFile: "/etc/traefik/fullchain.pem"
-        keyFile: "/etc/traefik/privkey.pem"
 
 # API and dashboard configuration
 api:

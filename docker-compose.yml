@@ -1,12 +1,10 @@
 services:
-  # Our replicated query apis
+  # Our replicated query APIs
   query_api:
     build:
       dockerfile: query_api.dockerfile
-    #ports:
-    #  - "8080/tcp"
     volumes:
-        - /var/transferware.ai-main/python_src/scratch:/python_src/scratch #TODO match with your system
+      - /var/transferware.ai-main/python_src/scratch:/python_src/scratch #TODO match with your system
     user: root #temporary
     environment:
       - "TRANSFERWARE_QUERY.TORCH_DEVICE=cpu" # TODO with the nvidia runtime this can be cuda
@@ -17,14 +15,10 @@ services:
       - broker
     labels:
       - "traefik.enable=true"
-      # Entry point HTTPS
       - "traefik.http.routers.query-api.rule=Host(`transferware-ai.umd.umich.edu`) && PathPrefix(`/api`)"
       - "traefik.http.routers.query-api.entrypoints=websecure"
-      # Enable TLS
       - "traefik.http.routers.query-api.tls=true"
-      # Strip /api as the python server serves on root
       - "traefik.http.middlewares.strip-api.stripprefix.prefixes=/api"
-      # Namespace query api on /api to allow static site on root
       - "traefik.http.routers.query-api.middlewares=strip-api"
       - "traefik.http.services.query-api.loadbalancer.server.port=8080"
 
@@ -32,8 +26,6 @@ services:
   static_site:
     build:
       dockerfile: static_site.dockerfile
-    #ports:
-    #  - "8080/tcp"
     deploy:
       replicas: 2
     depends_on:
@@ -62,17 +54,12 @@ services:
   balancer:
     image: traefik
     ports:
-      # Our application
-      - "80:80"
-      # HTTPS support
-      - "443:443"
-      # The Web UI (enabled by --api.insecure=true)
-      - "8080:8080"
+      - "80:80"  # HTTP
+      - "443:443"  # HTTPS
+      - "8080:8080"  # Dashboard
     volumes:
       - /var/transferware.ai-main/traefik.yml:/etc/traefik/traefik.yml
       - /var/run/docker.sock:/var/run/docker.sock
       - /etc/letsencrypt/live/transferware-ai.umd.umich.edu/fullchain.pem:/etc/traefik/fullchain.pem:ro
       - /etc/letsencrypt/live/transferware-ai.umd.umich.edu/privkey.pem:/etc/traefik/privkey.pem:ro
-
-
     user: root #temporary
