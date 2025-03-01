@@ -8,16 +8,17 @@ function ViewMatches() {
   const location = useLocation();
   const { imagePreviewUrl } = location.state || {};
 
-  // ✅ Redirect to Flask survey endpoint
-  /*const handleSurveyRedirect = () => {
-    window.location.href = "http://localhost:5000/survey"; // Adjust for production
+
+  const submitSurvey = () => {
+    alert("Survey submitted! Thank you.");
+    const modal = document.getElementById("myModal");
+    if (modal) modal.style.display = "none";
   };
 
-  // ✅ Add event listeners for modal behavior
   useEffect(() => {
     const modal = document.getElementById("myModal");
     const btn = document.getElementById("surveyButton");
-    const span = document.getElementsByClassName("close")[0]; */
+    const span = document.getElementsByClassName("close")[0];
 
     if (btn) {
       btn.onclick = function () {
@@ -69,7 +70,7 @@ function ViewMatches() {
               <div className="flex items-center justify-center p-4">
                 <button
                   id="surveyButton"
-                  //onClick={handleSurveyRedirect}
+                  onClick={submitSurvey}
                   className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">
                   Beta Testing Survey
                 </button>
@@ -79,8 +80,6 @@ function ViewMatches() {
         ) : (
           <p>No image preview available</p>
         )}
-
-        {/* Match Results Component */}
         <div className="flex1 justify-center items-center overflow-y-auto">
           <MatchResults />
         </div>
