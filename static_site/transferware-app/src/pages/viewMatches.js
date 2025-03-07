@@ -11,6 +11,7 @@ function ViewMatches() {
 
   const submitSurvey = () => {
     alert("Survey submitted! Thank you.");
+    document.location.assign("http://localhost:5001");
     const modal = document.getElementById("myModal");
     if (modal) modal.style.display = "none";
   };
@@ -80,6 +81,7 @@ function ViewMatches() {
         ) : (
           <p>No image preview available</p>
         )}
+        
         <div className="flex1 justify-center items-center overflow-y-auto">
           <MatchResults />
         </div>

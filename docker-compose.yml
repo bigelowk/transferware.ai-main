@@ -32,11 +32,20 @@ services:
       replicas: 2
     depends_on:
       - balancer
-      - mongodb
+      #- mongodb
     labels:
       - "traefik.http.routers.static-site.rule=PathPrefix(`/`) && !PathPrefix(`/api`)"
+   # environment:
+   #   - "MONGO_URI: mongodb://mongodb:27017/mydatabase"
+  survey_app:
+    build: 
+      dockerfile: survey-app/Dockerfile
+    ports:
+      - "5001:5001"
     environment:
-      - "MONGO_URI: mongodb://mongodb:27017/mydatabase"
+      - MONGO_URI=mongodb://mongodb:27017/SurveyApp
+    depends_on:
+      - mongodb
   mongodb:
     image: mongo:7.0
     container_name: mongo-container
