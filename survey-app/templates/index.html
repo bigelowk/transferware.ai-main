@@ -89,10 +89,6 @@
       <label for="name">Name:</label>
       <input type="text" id="name" name="name" placeholder="Enter your name" required>
 
-      <!-- Email -->
-      <label for="email">Email:</label>
-      <input type="email" id="email" name="email" placeholder="Enter your email" required>
-
       <!-- Searched Image Details -->
       <label>Did the searched image include (select all that apply):</label>
       <div class="checkbox-group">
@@ -138,6 +134,22 @@
         <option value="25-50%">25-50%</option>
         <option value="less than 25%">Less than 25%</option>
       </select>
+
+      <label>Select the shape of vessel searched (if known):</label>
+      <div class="checkbox-group">
+        <div>
+          <input type="checkbox" id="whole-pattern" name="image-included" value="Whole Pattern">
+          <label for="whole-pattern">Flatware</label>
+        </div>
+        <div>
+          <input type="checkbox" id="whole-makers-mark" name="image-included" value="Whole Maker's Mark">
+          <label for="whole-makers-mark">Hollowware</label>
+        </div>
+        <div>
+          <input type="checkbox" id="other" name="image-included" value="Other">
+          <label for="other">Other</label>
+        </div>
+      </div>
 
       <label for="pattern-found">Did the results include the correct pattern?</label>
       <select id="pattern-found" name="pattern-found" required>

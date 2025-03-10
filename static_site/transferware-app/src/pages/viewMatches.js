@@ -10,7 +10,6 @@ function ViewMatches() {
 
 
   const submitSurvey = () => {
-    alert("Survey submitted! Thank you.");
     document.location.assign("http://localhost:5001");
     const modal = document.getElementById("myModal");
     if (modal) modal.style.display = "none";

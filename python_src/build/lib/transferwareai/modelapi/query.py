@@ -27,6 +27,11 @@ from transferwareai.models.adt import ImageMatch, Model
 from transferwareai.tccapi.api_cache import ApiCache
 from fastapi.responses import FileResponse
 
+from fastapi import Request
+from pymongo import MongoClient
+from datetime import datetime
+import os
+
 # Required to avoid GC collecting tasks
 background_tasks = set()
 
@@ -54,14 +59,34 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+def mongoClient():
+    # Connect to MongoDB
+    client = MongoClient("mongodb://localhost:27017/")  # Update with your MongoDB URI
+    db = client["analytic_logs_db"]  # Use an existing database or create a new one
+    collection = db["image_analytics"]  # Define a new collection
+    return collection 
+
+mongo_uri = os.environ.get('MONGO_URI', 'mongodb://localhost:27017/SurveyApp')
+client = MongoClient(mongo_uri)
+db = client.get_default_database()
+
+
 
 @app.post("/query", response_model=list[ImageMatch])
 async def query_model(
+    request: Request,
     file: Annotated[bytes, File()], model: Annotated[Model, Depends(get_model)]
 ):
     """Send an image to the model, and get the 10 closest images back."""
 
     start = time.clock_gettime_ns(time.CLOCK_MONOTONIC)
+    # Get Client IP Address
+    client_ip = request.client.host
+
+    # Capture submission timestamp
+    submission_time = datetime.utcnow()
+
+    logging.info(f"Image submitted from IP: {client_ip} at {submission_time}")
 
     # Parse image into tensor
     try:
@@ -76,8 +101,19 @@ async def query_model(
     top_matches = model.query(img, top_k=settings.query.top_k)
 
     end = time.clock_gettime_ns(time.CLOCK_MONOTONIC)
+    query_time = (end - start) / 1e6  # Convert to milliseconds
 
-    logging.debug(f"Query took {(end - start) / 1e6}ms.")
+    # Store submission details in MongoDB
+    #collection = mongoClient()
+
+    db.image_analytics.insert_one({
+        "submission_time": submission_time,
+        "query_time_ms": query_time,
+        "client_ip": client_ip  # Store IP in DB
+        #"confidence_intervals": top_matches
+    })
+
+    logging.info(f"Query from {client_ip} took {query_time}ms.")
 
     return top_matches
 

@@ -9,10 +9,12 @@ services:
       - ./python_src/scratch:/python_src/scratch # TODO match your system, this is the resource dir
     environment:
       - "TRANSFERWARE_QUERY.TORCH_DEVICE=cpu" # TODO with the nvidia runtime this can be cuda
+      - MONGO_URI=mongodb://mongodb:27017/SurveyApp
     deploy:
       replicas: 1
     depends_on:
       - balancer
+      - mongodb
       - broker
     labels:
       # Strip /api as the python server serves on root
