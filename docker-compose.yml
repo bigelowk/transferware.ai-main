@@ -1,3 +1,7 @@
+networks:
+  transferware_network:
+    driver: bridge
+    
 services:
   # Our replicated query APIs
   query_api:
@@ -13,14 +17,16 @@ services:
     depends_on:
       - balancer
       - broker
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.query-api.rule=Host(`transferware-ai.umd.umich.edu`) && PathPrefix(`/api`)"
-      - "traefik.http.routers.query-api.entrypoints=websecure"
-      - "traefik.http.routers.query-api.tls=true"
-      - "traefik.http.middlewares.strip-api.stripprefix.prefixes=/api"
-      - "traefik.http.routers.query-api.middlewares=strip-api"
-      - "traefik.http.services.query-api.loadbalancer.server.port=8080"
+    networks:
+      - transferware_network
+    #labels:
+    #  - "traefik.enable=true"
+    #  - "traefik.http.routers.query-api.rule=Host(`transferware-ai.umd.umich.edu`) && PathPrefix(`/api`)"
+    #  - "traefik.http.routers.query-api.entrypoints=websecure"
+    #  - "traefik.http.routers.query-api.tls=true"
+    #  - "traefik.http.middlewares.strip-api.stripprefix.prefixes=/api"
+    #  - "traefik.http.routers.query-api.middlewares=strip-api"
+    #  - "traefik.http.services.query-api.loadbalancer.server.port=8080"
 
   # Serves the frontend
   static_site:
@@ -28,13 +34,15 @@ services:
       dockerfile: static_site.dockerfile
     deploy:
       replicas: 2
+    networks:
+      - transferware_network
     depends_on:
       - balancer
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.static-site.rule=Host(`transferware-ai.umd.umich.edu`) && PathPrefix(`/`) && !PathPrefix(`/api`)"
-      - "traefik.http.routers.static-site.entrypoints=websecure"
-      - "traefik.http.routers.static-site.tls=true"
+    #labels:
+    #  - "traefik.enable=true"
+    #  - "traefik.http.routers.static-site.rule=Host(`transferware-ai.umd.umich.edu`) && PathPrefix(`/`) && !PathPrefix(`/api`)"
+    #  - "traefik.http.routers.static-site.entrypoints=websecure"
+    #  - "traefik.http.routers.static-site.tls=true"
 
   # MQTT broker
   broker:
@@ -45,10 +53,12 @@ services:
     volumes:
       - /var/transferware.ai-main/mosquitto.conf:/mosquitto/config/mosquitto.conf
     user: root #temporary
+    networks:
+      - transferware_network
     depends_on:
       - balancer
-    labels:
-      - "traefik.enable=false"
+    #labels:
+    #  - "traefik.enable=false"
 
   # Reverse proxy
   balancer:
@@ -62,6 +72,8 @@ services:
       - /etc/letsencrypt/live/transferware-ai.umd.umich.edu/fullchain.pem:/etc/traefik/fullchain.pem:ro
       - /etc/letsencrypt/live/transferware-ai.umd.umich.edu/privkey.pem:/etc/traefik/privkey.pem:ro
     user: root #temporary
+    networks:
+      - transferware_network
 
 
     
