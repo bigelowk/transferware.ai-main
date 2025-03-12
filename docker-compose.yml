@@ -52,28 +52,29 @@ services:
 
   # Reverse proxy
   balancer:
-    #image: nginx:latest
-    #ports:
-    #  - "80:80"  # HTTP
-    #  - "443:443"  # HTTPS
-    #volumes:
-    #  - /var/transferware.ai-main/nginx.conf:/etc/nginx/nginx.conf:ro
-      #- /var/run/docker.sock:/var/run/docker.sock
-    #  - /etc/letsencrypt/live/transferware-ai.umd.umich.edu/fullchain.pem:/etc/traefik/fullchain.pem:ro
-    #  - /etc/letsencrypt/live/transferware-ai.umd.umich.edu/privkey.pem:/etc/traefik/privkey.pem:ro
-    #user: root #temporary
-
-
-
-    image: traefik
+    image: nginx:latest
     ports:
       - "80:80"  # HTTP
       - "443:443"  # HTTPS
-      - "8080:8080"  # Dashboard
     volumes:
-      - /var/transferware.ai-main/traefik.yml:/etc/traefik/traefik.yml
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - /var/transferware.ai-main/nginx.conf:/etc/nginx/nginx.conf:ro
+      #- /var/run/docker.sock:/var/run/docker.sock
+      - /etc/letsencrypt/live/transferware-ai.umd.umich.edu/fullchain.pem:/etc/traefik/fullchain.pem:ro
+      - /etc/letsencrypt/live/transferware-ai.umd.umich.edu/privkey.pem:/etc/traefik/privkey.pem:ro
+    user: root #temporary
+
+
+    
+    #image: traefik
+    #ports:
+    #  - "80:80"  # HTTP
+    #  - "443:443"  # HTTPS
+    #  - "8080:8080"  # Dashboard
+    #volumes:
+    #  - /var/transferware.ai-main/traefik.yml:/etc/traefik/traefik.yml
+    #  - /var/run/docker.sock:/var/run/docker.sock
+    #  - /etc/letsencrypt:/etc/letsencrypt:ro
       #- /etc/letsencrypt/live/transferware-ai.umd.umich.edu/fullchain.pem:/etc/traefik/fullchain.pem:ro
       #- /etc/letsencrypt/live/transferware-ai.umd.umich.edu/privkey.pem:/etc/traefik/privkey.pem:ro
-    user: root #temporary
+    #user: root #temporary
+    
