@@ -31,6 +31,7 @@ from fastapi import Request
 from pymongo import MongoClient
 from datetime import datetime
 import os
+import base64
 
 # Required to avoid GC collecting tasks
 background_tasks = set()
@@ -59,6 +60,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+#mongoDB set up
 def mongoClient():
     # Connect to MongoDB
     client = MongoClient("mongodb://localhost:27017/")  # Update with your MongoDB URI
@@ -75,7 +77,9 @@ db = client.get_default_database()
 @app.post("/query", response_model=list[ImageMatch])
 async def query_model(
     request: Request,
-    file: Annotated[bytes, File()], model: Annotated[Model, Depends(get_model)]
+    #file: Annotated[bytes, File()], model: Annotated[Model, Depends(get_model)],
+    file: UploadFile, model: Annotated[Model, Depends(get_model)],
+    #file: Annotated[bytes, File()]
 ):
     """Send an image to the model, and get the 10 closest images back."""
 
@@ -86,11 +90,18 @@ async def query_model(
     # Capture submission timestamp
     submission_time = datetime.utcnow()
 
+    # Read the uploaded file as binary
+    image_data = await file.read()
+
+    # Convert image to Base64 string
+    image_base64 = base64.b64encode(image_data).decode("utf-8")
+
     logging.info(f"Image submitted from IP: {client_ip} at {submission_time}")
 
     # Parse image into tensor
     try:
-        raw_tensor = torch.frombuffer(file, dtype=torch.uint8)
+        #raw_tensor = torch.frombuffer(file, dtype=torch.uint8)
+        raw_tensor = torch.frombuffer(image_data, dtype=torch.uint8)
         img = torchvision.io.decode_image(raw_tensor, torchvision.io.ImageReadMode.RGB)
     except Exception as e:
         raise HTTPException(
@@ -106,14 +117,19 @@ async def query_model(
     # Store submission details in MongoDB
     #collection = mongoClient()
 
-    db.image_analytics.insert_one({
+
+    result = db.image_analytics.insert_one({
         "submission_time": submission_time,
         "query_time_ms": query_time,
-        "client_ip": client_ip  # Store IP in DB
-        #"confidence_intervals": top_matches
+        "client_ip": client_ip,  # Store IP in DB
+        "image_filename": file.filename,
+        "image_base64": image_base64  # Store the encoded image
+        #"confidence_intervals": top_matches[0:3]
     })
 
-    logging.info(f"Query from {client_ip} took {query_time}ms.")
+    result_id = str(result.inserted_id)
+    
+    logging.info(f"Query from {client_ip} {result_id} took {query_time}ms.")
 
     return top_matches
 

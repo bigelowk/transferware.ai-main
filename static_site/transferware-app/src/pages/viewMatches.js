@@ -3,7 +3,6 @@ import { useLocation } from "react-router-dom";
 import MatchResults from "../components/matchResults";
 import Footer from "../components/footer";
 
-
 function ViewMatches() {
   const location = useLocation();
   const { imagePreviewUrl } = location.state || {};
