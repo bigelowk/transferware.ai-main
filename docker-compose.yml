@@ -12,10 +12,12 @@ services:
     user: root #temporary
     environment:
       - "TRANSFERWARE_QUERY.TORCH_DEVICE=cpu" # TODO with the nvidia runtime this can be cuda
+      - MONGO_URI=mongodb://mongodb:27017/SurveyApp
     deploy:
       replicas: 2
     depends_on:
       - balancer
+      - mongodb
       - broker
     networks:
       - transferware_network
@@ -38,6 +40,30 @@ services:
       - transferware_network
     depends_on:
       - balancer
+      #- mongodb
+    labels:
+      - "traefik.http.routers.static-site.rule=PathPrefix(`/`) && !PathPrefix(`/api`)"
+   # environment:
+   #   - "MONGO_URI: mongodb://mongodb:27017/mydatabase"
+   
+  survey_app:
+    build: 
+      dockerfile: survey-app/Dockerfile
+    ports:
+      - "5001:5001"
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/SurveyApp
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:7.0
+    container_name: mongo-container
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.static-site.rule=Host(`transferware-ai.umd.umich.edu`) && PathPrefix(`/`) && !PathPrefix(`/api`)"
