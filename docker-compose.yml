@@ -19,14 +19,14 @@ services:
       - broker
     networks:
       - transferware_network
-    #labels:
-    #  - "traefik.enable=true"
-    #  - "traefik.http.routers.query-api.rule=Host(`transferware-ai.umd.umich.edu`) && PathPrefix(`/api`)"
-    #  - "traefik.http.routers.query-api.entrypoints=websecure"
-    #  - "traefik.http.routers.query-api.tls=true"
-    #  - "traefik.http.middlewares.strip-api.stripprefix.prefixes=/api"
-    #  - "traefik.http.routers.query-api.middlewares=strip-api"
-    #  - "traefik.http.services.query-api.loadbalancer.server.port=8080"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.query-api.rule=Host(`transferware-ai.umd.umich.edu`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.query-api.entrypoints=websecure"
+      - "traefik.http.routers.query-api.tls=true"
+      - "traefik.http.middlewares.strip-api.stripprefix.prefixes=/api"
+      - "traefik.http.routers.query-api.middlewares=strip-api"
+      - "traefik.http.services.query-api.loadbalancer.server.port=8080"
 
   # Serves the frontend
   static_site:
@@ -38,11 +38,11 @@ services:
       - transferware_network
     depends_on:
       - balancer
-    #labels:
-    #  - "traefik.enable=true"
-    #  - "traefik.http.routers.static-site.rule=Host(`transferware-ai.umd.umich.edu`) && PathPrefix(`/`) && !PathPrefix(`/api`)"
-    #  - "traefik.http.routers.static-site.entrypoints=websecure"
-    #  - "traefik.http.routers.static-site.tls=true"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.static-site.rule=Host(`transferware-ai.umd.umich.edu`) && PathPrefix(`/`) && !PathPrefix(`/api`)"
+      - "traefik.http.routers.static-site.entrypoints=websecure"
+      - "traefik.http.routers.static-site.tls=true"
 
   # MQTT broker
   broker:
@@ -62,32 +62,17 @@ services:
 
   # Reverse proxy
   balancer:
-    image: nginx:latest
+   
+    image: traefik
     ports:
       - "80:80"  # HTTP
-      - "8080:8080"
       - "443:443"  # HTTPS
+      - "8080:8080"  # Dashboard
     volumes:
-      - /var/transferware.ai-main/nginx.conf:/etc/nginx/nginx.conf:ro
-      #- /var/run/docker.sock:/var/run/docker.sock
+      - /var/transferware.ai-main/traefik.yml:/etc/traefik/traefik.yml
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/letsencrypt:/etc/letsencrypt:ro
       - /etc/letsencrypt/live/transferware-ai.umd.umich.edu/fullchain.pem:/etc/traefik/fullchain.pem:ro
       - /etc/letsencrypt/live/transferware-ai.umd.umich.edu/privkey.pem:/etc/traefik/privkey.pem:ro
     user: root #temporary
-    networks:
-      - transferware_network
-
-
-    
-    #image: traefik
-    #ports:
-    #  - "80:80"  # HTTP
-    #  - "443:443"  # HTTPS
-    #  - "8080:8080"  # Dashboard
-    #volumes:
-    #  - /var/transferware.ai-main/traefik.yml:/etc/traefik/traefik.yml
-    #  - /var/run/docker.sock:/var/run/docker.sock
-    #  - /etc/letsencrypt:/etc/letsencrypt:ro
-      #- /etc/letsencrypt/live/transferware-ai.umd.umich.edu/fullchain.pem:/etc/traefik/fullchain.pem:ro
-      #- /etc/letsencrypt/live/transferware-ai.umd.umich.edu/privkey.pem:/etc/traefik/privkey.pem:ro
-    #user: root #temporary
     
