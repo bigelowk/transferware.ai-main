@@ -103,6 +103,10 @@ async def query_model(
     # Query model
     top_matches = model.query(img, top_k=settings.query.top_k)
 
+    matches = {}
+    for img in top_matches:
+        matches[str(img.id)] = img.confidence
+
     end = time.clock_gettime_ns(time.CLOCK_MONOTONIC)
     query_time = (end - start) / 1e6  # Convert to milliseconds
 
@@ -115,8 +119,8 @@ async def query_model(
         "query_time_ms": query_time,
         "client_ip": client_ip,  # Store IP in DB
         "image_filename": file.filename,
-        "image_base64": image_base64  # Store the encoded image
-        #"confidence_intervals": top_matches[0:3]
+        "image_base64": image_base64,  # Store the encoded image
+        "confidence_intervals": matches
     })
 
     result_id = str(result.inserted_id)
