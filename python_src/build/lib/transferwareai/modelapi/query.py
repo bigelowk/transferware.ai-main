@@ -61,18 +61,10 @@ app.add_middleware(
 )
 
 #mongoDB set up
-def mongoClient():
-    # Connect to MongoDB
-    client = MongoClient("mongodb://localhost:27017/")  # Update with your MongoDB URI
-    db = client["analytic_logs_db"]  # Use an existing database or create a new one
-    collection = db["image_analytics"]  # Define a new collection
-    return collection 
 
 mongo_uri = os.environ.get('MONGO_URI', 'mongodb://localhost:27017/SurveyApp')
 client = MongoClient(mongo_uri)
 db = client.get_default_database()
-
-
 
 @app.post("/query", response_model=list[ImageMatch])
 async def query_model(
