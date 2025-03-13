@@ -6,10 +6,6 @@ WORKDIR python_src
 
 # Install python
 RUN apt update && apt install python3 python3-pip -y
-#RUN apt-get update --allow-insecure-repositories || true && \
-#    apt-get install -y --no-install-recommends curl gnupg ca-certificates && \
-#    apt-get clean \
-#    apt install python3 python3-pip -y
 
 # Install deps
 RUN pip3 install -r ./requirements.txt
@@ -21,6 +17,6 @@ RUN pip3 install --upgrade pip
 RUN pip3 install .
 
 WORKDIR scripts
-EXPOSE 8080:8080
+EXPOSE 8080
 # Run query api. Note that the settings file is compiled into container
 CMD ["python3", "query_api.py"]

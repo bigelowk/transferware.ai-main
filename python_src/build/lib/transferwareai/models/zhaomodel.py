@@ -5,6 +5,8 @@ from pathlib import Path
 from typing import Optional, Callable, Type, TypeVar
 
 from PIL.Image import Image
+from PIL import UnidentifiedImageError
+
 import annoy
 import torch
 import torchvision
@@ -474,7 +476,7 @@ class ZhaoModel(Model):
         )
 
         logging.debug(f"Loading annoy index")
-        self.index = annoy.AnnoyIndex(self.model.embedding_size(), metric="euclidean")
+        self.index = annoy.AnnoyIndex(self.model.embedding_size(), metric="angular")
         self.index.load(str(idx_path))
 
     def query(self, image: Tensor | Image, top_k: int = 10) -> list[ImageMatch]:
@@ -753,10 +755,10 @@ class ZhaoTrainer(Trainer):
         torch.save(class_cnt, cnt_path)
 
     def generate_annoy_cache(
-        self,
-        model: T,
-        ds: CacheDataset,
-        visitor: Optional[Callable] = None,
+            self,
+            model: T,
+            ds: CacheDataset,
+            visitor: Optional[Callable] = None,
     ) -> tuple[annoy.AnnoyIndex, list[int]]:
         """
         Builds an annoy index for the dataset, using embeddings given by the model. Returns the index and a list of
@@ -764,26 +766,38 @@ class ZhaoTrainer(Trainer):
         """
         ds.set_transforms(model.transform)
 
-        index = annoy.AnnoyIndex(model.embedding_size(), metric="euclidean")
+        index = annoy.AnnoyIndex(model.embedding_size(), metric="angular")
         # Each index is the annoy id, each element is the matching tcc pattern id
         aid_to_tccid: list[int] = []
 
         pattern_ids = ds.get_pattern_ids()
 
+        # find which patterns have corrupt images
+        skip_ids: list[int] = []
+
         for i in tqdm(range(len(ds))):
-            # Load image
-            img, _ = ds[i]
-            img = img.to(model.device)
-            pattern_id = pattern_ids[i]
+            try:
+                # Load image
+                img, _ = ds[i]
+                img = img.to(model.device)
+                pattern_id = pattern_ids[i]
 
-            # Extract embedding
-            embedding = model.get_embedding(img)
-            # Add vector to cache
-            index.add_item(i, embedding.detach())
-            aid_to_tccid.append(pattern_id)
+                # Extract embedding
+                embedding = model.get_embedding(img)
+                # Add vector to cache
+                index.add_item(i, embedding.detach())
+                aid_to_tccid.append(pattern_id)
 
-            if visitor:
-                visitor(embedding, img, i)
+                if visitor:
+                    visitor(embedding, img, i)
+
+            # if an image is corrupted, record its pattern id
+            except UnidentifiedImageError as err:
+                skip_ids.append(pattern_ids[i])
+
+        # display the corrupted images
+        logging.info(f"Cache has {len(skip_ids)} patterns with corrupted images")
+        logging.info(f"Corrupted patterns: {skip_ids}")
 
         index.build(10000)
         return index, aid_to_tccid
@@ -795,7 +809,11 @@ class EmbeddingsValidator(GenericValidator):
     def validate(
         self, model: ZhaoModel, validation_set: ImageFolder
     ) -> tuple[dict[int, float], float]:
-        validation_set.transform = model.model.transform
+
+        # turn the images into tensors
+        # do not apply the normal model transformations at this time, because these are applied when the image is queried
+        transform = transforms.Compose([transforms.ToTensor()])
+        validation_set.transform = transform
 
         return super().validate(model, validation_set)
 

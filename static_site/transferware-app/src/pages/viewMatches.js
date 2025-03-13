@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import React from "react";
+import { useLocation } from "react-router-dom"; // Import useLocation
 import MatchResults from "../components/matchResults";
 import Footer from "../components/footer";
 
@@ -37,24 +37,25 @@ function ViewMatches() {
       }
     };
   }, []);
+  const location = useLocation(); // Retrieve location object
+  const { imagePreviewUrl } = location.state || {}; // Destructure imagePreviewUrl from state, defaulting to an empty object if state is undefined
 
   return (
     <div>
-      {/* Image Preview Section */}
       <div className="flex flex-col xl:flex-row">
         {imagePreviewUrl ? (
           <div className="flex items-start justify-center p-12 bg-zinc-900">
             <div className="flex flex-col items-center">
-              <div className="mb-4 p-6">
-                <h1 className="font-semibold text-white text-2xl font-serif">
+              <div className=" mb-4 p-6">
+                <h1 className="font-semibold text-white text-2xl font-serif ">
                   Your Match Results
                 </h1>
-                <hr className="rounded w-1/2 h-1 my-4 border-0 bg-amber-600" />
+                <hr className="rounded w-1/2 h-1  my-4 border-0 rounded bg-amber-600"></hr>
                 <p className="text-white font-serif">
                   These are transferware pieces from our database that look
                   similar to the sherd that you attached. The lower the
                   confidence number is, the closer of a match the pattern is.
-                  Navigate to the TCC website URL to get more information on
+                  Navigative to the TCC website url to get more information on
                   each pattern.
                 </p>
                 <hr className="rounded w-1/2 h-1 my-4 border-0 bg-amber-600" />
@@ -74,6 +75,11 @@ function ViewMatches() {
                   Beta Testing Survey
                 </button>
               </div>
+              <img
+                className="max-w-80"
+                src={imagePreviewUrl}
+                alt="Uploaded Preview"
+              />
             </div>
           </div>
         ) : (
@@ -84,7 +90,6 @@ function ViewMatches() {
           <MatchResults />
         </div>
       </div>
-
       <Footer />
     </div>
   );

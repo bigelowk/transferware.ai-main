@@ -476,7 +476,7 @@ class ZhaoModel(Model):
         )
 
         logging.debug(f"Loading annoy index")
-        self.index = annoy.AnnoyIndex(self.model.embedding_size(), metric="euclidean")
+        self.index = annoy.AnnoyIndex(self.model.embedding_size(), metric="angular")
         self.index.load(str(idx_path))
 
     def query(self, image: Tensor | Image, top_k: int = 10) -> list[ImageMatch]:
@@ -766,7 +766,7 @@ class ZhaoTrainer(Trainer):
         """
         ds.set_transforms(model.transform)
 
-        index = annoy.AnnoyIndex(model.embedding_size(), metric="euclidean")
+        index = annoy.AnnoyIndex(model.embedding_size(), metric="angular")
         # Each index is the annoy id, each element is the matching tcc pattern id
         aid_to_tccid: list[int] = []
 
@@ -809,7 +809,11 @@ class EmbeddingsValidator(GenericValidator):
     def validate(
         self, model: ZhaoModel, validation_set: ImageFolder
     ) -> tuple[dict[int, float], float]:
-        validation_set.transform = model.model.transform
+
+        # turn the images into tensors
+        # do not apply the normal model transformations at this time, because these are applied when the image is queried
+        transform = transforms.Compose([transforms.ToTensor()])
+        validation_set.transform = transform
 
         return super().validate(model, validation_set)
 

@@ -15,7 +15,6 @@ const MatchResults = () => {
             className="flex flex-col justify-center p-3 hover:border hover:shadow-sm"
             href={item.tcc_url}
             target="_blank"
-            rel="noopener noreferrer"
           >
             <div className="flex flex-row items-center lg:min-w-60 sm:p-6">
               <img
@@ -25,10 +24,10 @@ const MatchResults = () => {
               />
             </div>
             <p className="mb-1 font-serif text-xl font-semibold">
-              {item.pattern_name}
+              <span className="font-semibold "></span> {item.pattern_name}
             </p>
             <p className="mb-4 font-light text-gray-700">
-              Confidence: {item.confidence.toFixed(3)}
+              <span className="">Confidence:</span> {item.confidence.toFixed(3)}
             </p>
           </a>
         ))}
@@ -38,3 +37,4 @@ const MatchResults = () => {
 };
 
 export default MatchResults;
+
