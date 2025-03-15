@@ -32,10 +32,11 @@ from pymongo import MongoClient
 from datetime import datetime
 import os
 import base64
+from fastapi.responses import JSONResponse
 
 # Required to avoid GC collecting tasks
 background_tasks = set()
-
+result_id = None
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -73,6 +74,7 @@ async def query_model(
     file: UploadFile, model: Annotated[Model, Depends(get_model)],
     #file: Annotated[bytes, File()]
 ):
+    global result_id
     """Send an image to the model, and get the 10 closest images back."""
 
     start = time.clock_gettime_ns(time.CLOCK_MONOTONIC)
@@ -126,9 +128,15 @@ async def query_model(
     result_id = str(result.inserted_id)
     
     logging.info(f"Query from {client_ip} {result_id} took {query_time}ms.")
-
+    
     return top_matches
 
+@app.get("/analytics_id/")
+async def get_analytics_id(request: Request):
+    """Retrieves analytics record id from the global variable result_id."""
+    logging.info(f"===========ResultID: {result_id}")
+    data = {"result_id": result_id}
+    return JSONResponse(content=data, status_code=200)
 
 @app.get("/pattern/image/{id}")
 async def get_image_for_id(id: int, api: Annotated[ApiCache, Depends(get_api)]):

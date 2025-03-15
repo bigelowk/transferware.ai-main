@@ -3,12 +3,13 @@ import { useData } from "../DataContext";
 
 const MatchResults = () => {
   const { data } = useData();
-
+  
   if (!data) return <p>No data available</p>;
-
+  
   return (
     <div className="flex items-center lg:p-4">
       <div className="flex grid grid-cols-2 lg:grid-cols-3 gap-2 p-4 w-full">
+
         {data.map((item) => (
           <a
             key={item.id}
@@ -30,6 +31,7 @@ const MatchResults = () => {
             <p className="mb-4 font-light text-gray-700">
               Confidence: {item.confidence.toFixed(3)}
             </p>
+            
           </a>
         ))}
       </div>
