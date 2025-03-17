@@ -1,6 +1,3 @@
-networks:
-  transferware_network:
-    driver: bridge
     
 services:
   # Our replicated query APIs
@@ -19,8 +16,8 @@ services:
       - balancer
       - mongodb
       - broker
-    networks:
-      - transferware_network
+    #networks:
+    #  - transferware_network
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.query-api.rule=Host(`transferware-ai.umd.umich.edu`) && PathPrefix(`/api`)"
@@ -36,8 +33,8 @@ services:
       dockerfile: static_site.dockerfile
     deploy:
       replicas: 2
-    networks:
-      - transferware_network
+    #networks:
+    #  - transferware_network
     depends_on:
       - balancer
       #- mongodb
@@ -56,8 +53,8 @@ services:
       - MONGO_URI=mongodb://mongodb:27017/SurveyApp
     depends_on:
       - mongodb
-    networks:
-      -transferware_network
+    #networks:
+    #  -transferware_network
 
   mongodb:
     image: docker.io/mongo:7.0
@@ -72,8 +69,8 @@ services:
     #  - "traefik.http.routers.static-site.rule=Host(`transferware-ai.umd.umich.edu`) && PathPrefix(`/`) && !PathPrefix(`/api`)"
     #  - "traefik.http.routers.static-site.entrypoints=websecure"
     #  - "traefik.http.routers.static-site.tls=true"
-    networks:
-      - transferware_network
+    #networks:
+    #  - transferware_network
 
   # MQTT broker
   broker:
@@ -84,8 +81,8 @@ services:
     volumes:
       - /var/transferware.ai-main/mosquitto.conf:/mosquitto/config/mosquitto.conf
     user: root #temporary
-    networks:
-      - transferware_network
+    #networks:
+    #  - transferware_network
     depends_on:
       - balancer
     #labels:
