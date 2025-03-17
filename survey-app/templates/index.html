@@ -48,37 +48,19 @@
     button:hover {
       background-color: #0056b3;
     }
-.checkbox-group {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start; /* Aligns checkboxes to the left */
-}
-
-.checkbox-group div {
-  display: flex;
-  align-items: center;
-  margin: 15px 0; /* Adjust vertical spacing */
-}
+    .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start; /* Aligns checkboxes to the left */
+    }
+    .checkbox-group div {
+      display: flex;
+      align-items: center;
+      margin: 15px 0; /* Adjust vertical spacing */
+    }
     .checkbox-group input {
       margin-right: 10px;
     }
-
-    .checkbox-group {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-
-  .checkbox-group div {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  label {
-    white-space: nowrap; 
-    text-align: left;
-  }
   </style>
 </head>
 <body>
@@ -93,28 +75,28 @@
       <label>Did the searched image include (select all that apply):</label>
       <div class="checkbox-group">
         <div>
-          <input type="checkbox" id="whole-pattern" name="image-included" value="Whole Pattern">
-          <label for="whole-pattern">The whole pattern</label>
+          <input type="checkbox" id="image-whole-pattern" name="image-included" value="Whole Pattern">
+          <label for="image-whole-pattern">The whole pattern</label>
         </div>
         <div>
-          <input type="checkbox" id="whole-makers-mark" name="image-included" value="Whole Maker's Mark">
-          <label for="whole-makers-mark">The whole maker's mark</label>
+          <input type="checkbox" id="image-whole-makers-mark" name="image-included" value="Whole Maker's Mark">
+          <label for="image-whole-makers-mark">The whole maker's mark</label>
         </div>
         <div>
-          <input type="checkbox" id="part-border" name="image-included" value="Part of the Border">
-          <label for="part-border">Part of the Border</label>
+          <input type="checkbox" id="image-part-border" name="image-included" value="Part of the Border">
+          <label for="image-part-border">Part of the Border</label>
         </div>
         <div>
-          <input type="checkbox" id="part-central" name="image-included" value="Part of the Central Image">
-          <label for="part-central">Part of the Central Image</label>
+          <input type="checkbox" id="image-part-central" name="image-included" value="Part of the Central Image">
+          <label for="image-part-central">Part of the Central Image</label>
         </div>
         <div>
-          <input type="checkbox" id="part-makers-mark" name="image-included" value="Part of the Maker's Mark">
-          <label for="part-makers-mark">Part of the Maker's Mark</label>
+          <input type="checkbox" id="image-part-makers-mark" name="image-included" value="Part of the Maker's Mark">
+          <label for="image-part-makers-mark">Part of the Maker's Mark</label>
         </div>
         <div>
-          <input type="checkbox" id="other" name="image-included" value="Other">
-          <label for="other">Other</label>
+          <input type="checkbox" id="image-other" name="image-included" value="Other">
+          <label for="image-other">Other</label>
         </div>
       </div>
       
@@ -138,16 +120,16 @@
       <label>Select the shape of vessel searched (if known):</label>
       <div class="checkbox-group">
         <div>
-          <input type="checkbox" id="whole-pattern" name="image-included" value="Whole Pattern">
-          <label for="whole-pattern">Flatware</label>
+          <input type="checkbox" id="shape-flatware" name="vessel-shape" value="Flatware">
+          <label for="shape-flatware">Flatware</label>
         </div>
         <div>
-          <input type="checkbox" id="whole-makers-mark" name="image-included" value="Whole Maker's Mark">
-          <label for="whole-makers-mark">Hollowware</label>
+          <input type="checkbox" id="shape-hollowware" name="vessel-shape" value="Hollowware">
+          <label for="shape-hollowware">Hollowware</label>
         </div>
         <div>
-          <input type="checkbox" id="other" name="image-included" value="Other">
-          <label for="other">Other</label>
+          <input type="checkbox" id="shape-other" name="vessel-shape" value="Other">
+          <label for="shape-other">Other</label>
         </div>
       </div>
 
@@ -176,7 +158,6 @@
   </div>
 
   <script>
-
     function getQueryParam(param) {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
@@ -186,8 +167,9 @@
     const analyticsId = getQueryParam("analytics_id");
     console.log(analyticsId);
     document.getElementById('analytics_id').value = analyticsId;
+
     // Toggle display for the "Other" description field
-    document.getElementById('other').addEventListener('change', function () {
+    document.getElementById('image-other').addEventListener('change', function () {
       const otherDescription = document.getElementById('other-description');
       if (this.checked) {
         otherDescription.style.display = 'block';

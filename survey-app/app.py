@@ -50,6 +50,17 @@ def submit():
     result = db.surveys.insert_one(data)
     survey_id = str(result.inserted_id)
 
+    # Log the form data for debugging
+    logging.info("Form Data: %s", data)
+
+    try:
+        result = db.surveys.insert_one(data)
+        survey_id = str(result.inserted_id)
+    except Exception as e:
+        logging.error("Error inserting survey data: %s", e)
+        flash("Error submitting the survey. Please try again.", "error")
+        return redirect(url_for('index'))
+
     flash("Survey submitted successfully!", "success")
     # Redirect to the results page with the survey_id as a query parameter
     return redirect(url_for('results', survey_id=survey_id))
