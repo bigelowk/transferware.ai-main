@@ -27,4 +27,7 @@ aiofile
 pytest
 tensorboard
 
-pymongo
+Flask==2.2.2
+pymongo==4.3.3
+Werkzeug==2.2.2
+requests
