@@ -1,5 +1,5 @@
 import React, { useEffect, useState  } from "react";
-import { useLocation } from "react-router-dom
+import { useLocation } from "react-router-dom";
 import MatchResults from "../components/matchResults";
 import Footer from "../components/footer";
 
