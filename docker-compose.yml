@@ -52,6 +52,8 @@ services:
       dockerfile: survey-app/Dockerfile
     ports:
       - "5001:5001"
+    networks:
+      -transferware_network
     environment:
       - MONGO_URI=mongodb://mongodb:27017/SurveyApp
     depends_on:
@@ -65,11 +67,13 @@ services:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.static-site.rule=Host(`transferware-ai.umd.umich.edu`) && PathPrefix(`/`) && !PathPrefix(`/api`)"
-      - "traefik.http.routers.static-site.entrypoints=websecure"
-      - "traefik.http.routers.static-site.tls=true"
+    #labels:
+    #  - "traefik.enable=true"
+    #  - "traefik.http.routers.static-site.rule=Host(`transferware-ai.umd.umich.edu`) && PathPrefix(`/`) && !PathPrefix(`/api`)"
+    #  - "traefik.http.routers.static-site.entrypoints=websecure"
+    #  - "traefik.http.routers.static-site.tls=true"
+    networks:
+      - transferware_network
 
   # MQTT broker
   broker:
