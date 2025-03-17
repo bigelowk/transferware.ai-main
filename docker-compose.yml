@@ -52,12 +52,12 @@ services:
       dockerfile: survey-app/Dockerfile
     ports:
       - "5001:5001"
-    networks:
-      -transferware_network
     environment:
       - MONGO_URI=mongodb://mongodb:27017/SurveyApp
     depends_on:
       - mongodb
+    networks:
+      -transferware_network
 
   mongodb:
     image: docker.io/mongo:7.0
