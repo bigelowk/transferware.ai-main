@@ -19,7 +19,7 @@ function ViewMatches() {
         console.log("Fetched result_id:", resultId);
   
         if (resultId) {
-          document.location.assign(`http://transferware-ai.umd.umich.edu:5001?analytics_id=${resultId}`);
+          document.location.assign(`http://transferware-ai.umd.umich.edu:5002?analytics_id=${resultId}`);
         } else {
           console.warn("Result ID not available yet");
         }
@@ -54,8 +54,6 @@ function ViewMatches() {
       }
     };
   }, []);
-  //const location = useLocation(); // Retrieve location object
-  //const { imagePreviewUrl } = location.state || {}; // Destructure imagePreviewUrl from state, defaulting to an empty object if state is undefined
 
   return (
     <div>

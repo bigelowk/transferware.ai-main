@@ -48,7 +48,7 @@ services:
     build: 
       dockerfile: survey-app/Dockerfile
     ports:
-      - "5001:5001"
+      - "5002:5001"
     environment:
       - MONGO_URI=mongodb://mongodb:27017/SurveyApp
     depends_on:
