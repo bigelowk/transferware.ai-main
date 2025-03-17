@@ -57,7 +57,7 @@ services:
       - mongodb
 
   mongodb:
-    image: mongo:7.0
+    image: docker.io/mongo:7.0
     container_name: mongo-container
     restart: always
     ports:
