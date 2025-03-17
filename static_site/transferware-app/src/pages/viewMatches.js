@@ -37,8 +37,8 @@ function ViewMatches() {
       }
     };
   }, []);
-  const location = useLocation(); // Retrieve location object
-  const { imagePreviewUrl } = location.state || {}; // Destructure imagePreviewUrl from state, defaulting to an empty object if state is undefined
+  //const location = useLocation(); // Retrieve location object
+  //const { imagePreviewUrl } = location.state || {}; // Destructure imagePreviewUrl from state, defaulting to an empty object if state is undefined
 
   return (
     <div>
