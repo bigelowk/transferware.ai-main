@@ -55,7 +55,7 @@ services:
       - mongodb
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.survey-app.rule=Host(`transferware-ai.umd.umich.edu`) && PathPrefix(`/`) && !PathPrefix(`/api`)"
+      - "traefik.http.routers.survey-app.rule=Host(`transferware-ai.umd.umich.edu`) && PathPrefix(`/survey`)"
     #networks:
     #  -transferware_network
 
@@ -92,7 +92,7 @@ services:
       - "80:80"  # HTTP
       - "443:443"  # HTTPS
       - "8080:8080"  # Dashboard
-      - "5001:5001" #Survey
+    #  - "5001:5001" #Survey
     volumes:
       - /var/transferware.ai-main/traefik.yml:/etc/traefik/traefik.yml
       - /var/run/docker.sock:/var/run/docker.sock
