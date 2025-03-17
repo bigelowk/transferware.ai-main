@@ -20,6 +20,12 @@ def index():
     analytics_id = request.args.get('analytics_id') #get_analytics_id()
     return render_template('index.html')
 
+@app.route('/survey/', methods=['GET'])
+def survey():
+    analytics_id = request.args.get('analytics_id')  # Get analytics_id from query parameters
+    # Render the survey page, passing the analytics_id to the template
+    return render_template('index.html', analytics_id=analytics_id)
+
 @app.route('/submit', methods=['POST'])
 def submit():
     # Gather form data
