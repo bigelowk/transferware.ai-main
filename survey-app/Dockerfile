@@ -13,7 +13,7 @@ COPY survey-app/. .
 #RUN npm install
 
 #Build App
-RUN npm run build
+#RUN npm run build
 
 EXPOSE 5001
 
