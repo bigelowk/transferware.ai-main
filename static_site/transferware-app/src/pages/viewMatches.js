@@ -1,7 +1,9 @@
-import React, { useEffect } from "react";
-import { useLocation } from "react-router-dom"; // Import useLocation
+import React, { useEffect, useState  } from "react";
+import { useLocation } from "react-router-dom
 import MatchResults from "../components/matchResults";
 import Footer from "../components/footer";
+
+
 
 function ViewMatches() {
   const location = useLocation();
@@ -9,9 +11,24 @@ function ViewMatches() {
 
 
   const submitSurvey = () => {
-    document.location.assign("http://localhost:5001");
-    const modal = document.getElementById("myModal");
-    if (modal) modal.style.display = "none";
+    fetch("/api/analytics_id/")
+      .then(response => response.json())
+      .then(data => {
+        const resultId = data.result_id || null;
+        localStorage.setItem("result_id", resultId || "");
+        console.log("Fetched result_id:", resultId);
+  
+        if (resultId) {
+          document.location.assign(`http://localhost:5001?analytics_id=${resultId}`);
+        } else {
+          console.warn("Result ID not available yet");
+        }
+  
+        // Close modal if exists
+        const modal = document.getElementById("myModal");
+        if (modal) modal.style.display = "none";
+      })
+      .catch(error => console.error("Error fetching result_id:", error));
   };
 
   useEffect(() => {
@@ -70,7 +87,8 @@ function ViewMatches() {
               <div className="flex items-center justify-center p-4">
                 <button
                   id="surveyButton"
-                  onClick={submitSurvey}
+                  onClick={submitSurvey} 
+        
                   className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">
                   Beta Testing Survey
                 </button>
