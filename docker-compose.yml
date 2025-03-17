@@ -42,6 +42,7 @@ services:
       - balancer
       #- mongodb
     labels:
+      - "traefik.enable=true"
       - "traefik.http.routers.static-site.rule=PathPrefix(`/`) && !PathPrefix(`/api`)"
    # environment:
    #   - "MONGO_URI: mongodb://mongodb:27017/mydatabase"
@@ -57,7 +58,7 @@ services:
       - mongodb
 
   mongodb:
-    image: mongo:7.0
+    image: docker.io/mongo:7.0
     container_name: mongo-container
     restart: always
     ports:
@@ -101,4 +102,6 @@ services:
       - /etc/letsencrypt/live/transferware-ai.umd.umich.edu/fullchain.pem:/etc/traefik/fullchain.pem:ro
       - /etc/letsencrypt/live/transferware-ai.umd.umich.edu/privkey.pem:/etc/traefik/privkey.pem:ro
     user: root #temporary
-    
+  
+volumes: 
+  mongo_data:

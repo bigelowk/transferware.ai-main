@@ -26,3 +26,5 @@ aiofile
 
 pytest
 tensorboard
+
+pymongo
