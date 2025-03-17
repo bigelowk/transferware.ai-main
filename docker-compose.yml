@@ -42,6 +42,7 @@ services:
       - balancer
       #- mongodb
     labels:
+      - "traefik.enable=true"
       - "traefik.http.routers.static-site.rule=PathPrefix(`/`) && !PathPrefix(`/api`)"
    # environment:
    #   - "MONGO_URI: mongodb://mongodb:27017/mydatabase"
