@@ -3,7 +3,7 @@
 # Abstract factory used
 model_implimentation = "ZhaoModelFactory"
 # Changes wether the cache will be automatically updated. Use for debugging
-update_cache = false
+update_cache = true
 # Token used for controling access to query api
 access_token = "CHANGE ME" # TODO change for prod
 
@@ -27,9 +27,9 @@ skip_ids = [67001]
 # Least acceptible validation percent that will still deploy the model
 validation_threshold = 0.1 # TODO change for prod
 # Updates index only when updating, rather than retraining the model entirely
-update_index_only = true
+update_index_only = false
 # Takes a subset of the patterns to train on
-subset = false
+subset = true
 # The size of the subset to take -- the subset has a seed so it will take the same images every time
 subset_n = 2000
 # IDs of the validation images that should also be included in the subset -- these are the cache ids, NOT tcc pattern ids
@@ -38,7 +38,7 @@ val_ids = [47293, 47312, 49403, 50161, 52332, 52463, 54131, 54656, 54727, 56311,
 # When training, split the images into smaller pieces
 split_images = false
 # The image tag to split and how many rows and columns to split it into. Formatted as a nested list: [['tag', rows, cols], ...]
-split_specifications = [['pattern', 2, 2], ['border', 1, 3]]
+split_specifications = []
 
 
 # Settings for the query api

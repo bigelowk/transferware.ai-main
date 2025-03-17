@@ -29,6 +29,7 @@ class TrainingJob:
 
         # Update cache
         train_ds = self._get_train_ds(update_cache)
+        logging.debug(f"Dataset size: {train_ds._image_paths.shape[0]}")
 
         logging.info("Cache updated")
 
@@ -72,12 +73,14 @@ class TrainingJob:
 
         if settings.training.split_images:
             logging.info("Splitting training images")
-            self._split_training_images(api, settings.training.split_specifications)
+            cache_ds = CacheDataset(api, skip_ids=settings.training.skip_ids)
+            self._split_training_images(cache_ds, settings.training.split_specifications)
+            return cache_ds
 
-            return CacheDataset(api, skip_ids=settings.training.skip_ids)
+        return CacheDataset(api, skip_ids=settings.training.skip_ids)
 
-    def _split_training_images(self, api_dataset: ApiCache, specs: list):
-        split(api_dataset, specs)
+    def _split_training_images(self, cache_dataset: CacheDataset, specs: list):
+        split(cache_dataset, specs)
 
     def _get_valid_ds(self) -> ImageFolder:
         res_path = Path(settings.training.validation_dir)
