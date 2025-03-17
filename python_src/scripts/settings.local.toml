@@ -9,9 +9,9 @@ access_token = "CHANGE ME" # TODO change for prod
 
 # Settings for the training script
 [training]
-torch_device = "cpu"
+torch_device = "cuda"
 # Num epochs to train
-epochs = 30
+epochs = 60
 # Number of epochs val loss worsens before we early stop
 early_stopping_thresh = 3
 # Num images loaded per step in epoch
