@@ -27,6 +27,12 @@ from transferwareai.models.adt import ImageMatch, Model
 from transferwareai.tccapi.api_cache import ApiCache
 from fastapi.responses import FileResponse
 
+from fastapi import Request
+from pymongo import MongoClient
+from datetime import datetime
+import os
+import base64
+
 # Required to avoid GC collecting tasks
 background_tasks = set()
 
@@ -54,18 +60,40 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+#mongoDB set up
+
+mongo_uri = os.environ.get('MONGO_URI', 'mongodb://localhost:27017/SurveyApp')
+client = MongoClient(mongo_uri)
+db = client.get_default_database()
 
 @app.post("/query", response_model=list[ImageMatch])
 async def query_model(
-    file: Annotated[bytes, File()], model: Annotated[Model, Depends(get_model)]
+    request: Request,
+    #file: Annotated[bytes, File()], model: Annotated[Model, Depends(get_model)],
+    file: UploadFile, model: Annotated[Model, Depends(get_model)],
+    #file: Annotated[bytes, File()]
 ):
     """Send an image to the model, and get the 10 closest images back."""
 
     start = time.clock_gettime_ns(time.CLOCK_MONOTONIC)
+    # Get Client IP Address
+    client_ip = request.client.host
+
+    # Capture submission timestamp
+    submission_time = datetime.utcnow()
+
+    # Read the uploaded file as binary
+    image_data = await file.read()
+
+    # Convert image to Base64 string
+    image_base64 = base64.b64encode(image_data).decode("utf-8")
+
+    logging.info(f"Image submitted from IP: {client_ip} at {submission_time}")
 
     # Parse image into tensor
     try:
-        raw_tensor = torch.frombuffer(file, dtype=torch.uint8)
+        #raw_tensor = torch.frombuffer(file, dtype=torch.uint8)
+        raw_tensor = torch.frombuffer(image_data, dtype=torch.uint8)
         img = torchvision.io.decode_image(raw_tensor, torchvision.io.ImageReadMode.RGB)
     except Exception as e:
         raise HTTPException(
@@ -76,8 +104,24 @@ async def query_model(
     top_matches = model.query(img, top_k=settings.query.top_k)
 
     end = time.clock_gettime_ns(time.CLOCK_MONOTONIC)
+    query_time = (end - start) / 1e6  # Convert to milliseconds
 
-    logging.debug(f"Query took {(end - start) / 1e6}ms.")
+    # Store submission details in MongoDB
+    #collection = mongoClient()
+
+
+    result = db.image_analytics.insert_one({
+        "submission_time": submission_time,
+        "query_time_ms": query_time,
+        "client_ip": client_ip,  # Store IP in DB
+        "image_filename": file.filename,
+        "image_base64": image_base64  # Store the encoded image
+        #"confidence_intervals": top_matches[0:3]
+    })
+
+    result_id = str(result.inserted_id)
+    
+    logging.info(f"Query from {client_ip} {result_id} took {query_time}ms.")
 
     return top_matches
 

@@ -1,10 +1,10 @@
 # Docker configuration backend
 providers:
   docker:
-    { }
-    
+    {}
+
 entryPoints:
-  #Redirect HTTP to HTTPS
+  # Redirect HTTP to HTTPS
   web:
     address: ":80"
     http:
@@ -15,22 +15,20 @@ entryPoints:
 
   websecure:
     address: ":443"
+    http:
+      tls: {}
 
 tls:
-  certificates:
-    - certFile: "/etc/traefik/fullchain.pem"
-      keyFile: "/etc/traefik/fullchain.pem"
-
-  options:
-    default:
-      minVersion: "TLSv1.2"
-      
-  stores:
+  stores: 
     default:
       defaultCertificate:
-      - certFile: "/etc/traefik/fullchain.pem"
-        keyFile: "/etc/traefik/privkey.pem"
+        certFile: "/etc/letsencrypt/live/transferware-ai.umd.umich.edu/fullchain.pem"
+        keyFile: "/etc/letsencrypt/live/transferware-ai.umd.umich.edu/privkey.pem"
 
 # API and dashboard configuration
 api:
+  dashboard: true
   insecure: true
+
+log:
+  level: DEBUG
