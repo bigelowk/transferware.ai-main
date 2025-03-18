@@ -10,7 +10,7 @@ app = Flask(__name__)
 app.secret_key = 'replace_with_a_secret_key'
 
 # Connect to MongoDB using the URI from the environment variable
-mongo_uri = os.environ.get('MONGO_URI', 'mongodb://mongo-container:27017/SurveyApp')
+mongo_uri = os.environ.get('MONGO_URI', 'mongodb://mongodb:27017/SurveyApp')
 EXTERNAL_API_URL = "http://transferware-ai.umd.umich.edu/api/analytics_id/"
 client = MongoClient(mongo_uri)
 db = client.get_default_database()
