@@ -47,8 +47,8 @@ def submit():
     }
 
     # Insert the document into the surveys collection and get its _id
-    result = db.surveys.insert_one(data)
-    survey_id = str(result.inserted_id)
+    # result = db.surveys.insert_one(data)
+    # survey_id = str(result.inserted_id)
 
     # Log the form data for debugging
     logging.info("Form Data: %s", data)
