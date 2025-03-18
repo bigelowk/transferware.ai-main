@@ -10,7 +10,7 @@ app = Flask(__name__)
 app.secret_key = 'replace_with_a_secret_key'
 
 # Connect to MongoDB using the URI from the environment variable
-mongo_uri = os.environ.get('MONGO_URI', 'mongodb://localhost:27017/SurveyApp')
+mongo_uri = os.environ.get('MONGO_URI', 'mongodb://mongodb:27017/SurveyApp')
 EXTERNAL_API_URL = "http://transferware-ai.umd.umich.edu/api/analytics_id/"
 client = MongoClient(mongo_uri)
 db = client.get_default_database()
@@ -28,6 +28,7 @@ def survey():
 
 @app.route('/submit', methods=['POST'])
 def submit():
+    
     # Gather form data
     #analytics_id = request.args.get('analytics_id') #get_analytics_id()
     #logging.info("REQID: {request_id}")
@@ -59,7 +60,7 @@ def submit():
     except Exception as e:
         logging.error("Error inserting survey data: %s", e)
         flash("Error submitting the survey. Please try again.", "error")
-        return redirect(url_for('index'))
+        return redirect(url_for('index.html'))
 
     flash("Survey submitted successfully!", "success")
     # Redirect to the results page with the survey_id as a query parameter
