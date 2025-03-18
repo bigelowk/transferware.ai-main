@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Survey Submission</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      max-width: 800px;
+      margin: auto;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .survey-item {
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Your Survey Submission</h1>
+    {% if survey %}
+      <div class="survey-item"><strong>Name:</strong> {{ survey.name }}</div>
+      <div class="survey-item"><strong>Email:</strong> {{ survey.email }}</div>
+      <div class="survey-item"><strong>Image Included:</strong> {{ survey.image_included | join(', ') }}</div>
+      <div class="survey-item"><strong>Other Details:</strong> {{ survey.other_details or '' }}</div>
+      <div class="survey-item"><strong>Pattern Percentage:</strong> {{ survey.pattern_percentage }}</div>
+      <div class="survey-item"><strong>Pattern Found:</strong> {{ survey.pattern_found }}</div>
+      <div class="survey-item"><strong>Search Rank:</strong> {{ survey.search_rank or '' }}</div>
+      <div class="survey-item"><strong>TCC Pattern Number:</strong> {{ survey.tcc_pattern_number or '' }}</div>
+      <div class="survey-item"><strong>General Feedback:</strong> {{ survey.general_feedback }}</div>
+      <div class="survey-item"><strong>Submitted At:</strong>
+        {% if survey.submitted_at %}
+          {{ survey.submitted_at.strftime("%Y-%m-%d %H:%M:%S") }}
+        {% endif %}
+      </div>
+    {% else %}
+      <p>No survey submission found.</p>
+    {% endif %}
+  </div>
+</body>
+</html>

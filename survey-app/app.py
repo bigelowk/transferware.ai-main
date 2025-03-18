@@ -60,7 +60,7 @@ def submit():
     except Exception as e:
         logging.error("Error inserting survey data: %s", e)
         flash("Error submitting the survey. Please try again.", "error")
-        return redirect(url_for('index.html'))
+        return redirect(url_for('index'))
 
     flash("Survey submitted successfully!", "success")
     # Redirect to the results page with the survey_id as a query parameter
