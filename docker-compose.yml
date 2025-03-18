@@ -91,11 +91,13 @@ services:
   balancer:
    
     image: traefik
+    command:
+
     ports:
       - "80:80"  # HTTP
       - "443:443"  # HTTPS
       - "8080:8080"  # Dashboard
-    #  - "5001:5001" #Survey
+      - "8081:8081" #Survey
     volumes:
       - /var/transferware.ai-main/traefik.yml:/etc/traefik/traefik.yml
       - /var/run/docker.sock:/var/run/docker.sock

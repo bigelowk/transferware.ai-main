@@ -18,6 +18,9 @@ entryPoints:
     http:
       tls: {}
 
+  dashboard:
+    address: ":8081"
+
 tls:
   stores: 
     default:
