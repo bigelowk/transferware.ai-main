@@ -31,7 +31,7 @@ def submit():
     
     # Gather form data
     #analytics_id = request.args.get('analytics_id') #get_analytics_id()
-    #logging.info("REQID: {request_id}")
+    logging.info("Received post request to /submit", request.form)
     data = {
         'name': request.form.get('name'),
         'email': request.form.get('email'),
@@ -93,4 +93,4 @@ def get_analytics_id():
             
         
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001)
+    app.run(host='0.0.0.0', port=5001, debug=True)
