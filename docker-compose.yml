@@ -55,7 +55,7 @@ services:
       - mongodb
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.survey-app.rule=Host(`transferware-ai.umd.umich.edu`) && PathPrefix(`/survey`)"
+      - "traefik.http.routers.survey-app.rule=Host(`transferware-ai.umd.umich.edu`) && (PathPrefix(`/survey`) || PathPrefix(`/results`) || PathPrefix(`/submit`))" 
       - "traefik.http.routers.survey-app.entrypoints=websecure"
       - "traefik.http.routers.survey-app.tls=true"
       - "traefik.http.services.survey-app.loadbalancer.server.port=5001"
