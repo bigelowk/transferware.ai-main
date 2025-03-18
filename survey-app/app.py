@@ -31,7 +31,7 @@ def submit():
     
     # Gather form data
     #analytics_id = request.args.get('analytics_id') #get_analytics_id()
-    logging.info("Received post request to /submit", request.form)
+    #logging.info("Received post request to /submit", request.form)
     data = {
         'name': request.form.get('name'),
         'email': request.form.get('email'),
