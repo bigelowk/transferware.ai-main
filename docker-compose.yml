@@ -9,7 +9,7 @@ services:
     user: root #temporary
     environment:
       - "TRANSFERWARE_QUERY.TORCH_DEVICE=cpu" # TODO with the nvidia runtime this can be cuda
-      - MONGO_URI=mongodb://mongodb:27017/SurveyApp
+      - MONGO_URI=mongodb://mongo-container:27017/SurveyApp
     deploy:
       replicas: 2
     depends_on:
@@ -50,7 +50,7 @@ services:
     ports:
       - "5002:5001"
     environment:
-      - MONGO_URI=mongodb://mongodb:27017/SurveyApp
+      - MONGO_URI=mongodb://mongo-container:27017/SurveyApp
     depends_on:
       - mongodb
     labels:
