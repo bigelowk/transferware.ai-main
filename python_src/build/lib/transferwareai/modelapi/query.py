@@ -62,8 +62,14 @@ app.add_middleware(
 )
 
 #mongoDB set up
+username = os.environ.get("MONGO_USERNAME")
+password = os.environ.get("MONGO_PASSWORD")
+host = os.environ.get("MONGO_HOST")
+port = os.environ.get("MONGO_PORT")
+dbName = os.environ.get("MONGO_DB")
 
-mongo_uri = os.environ.get('MONGO_URI', 'mongodb://localhost:27017/SurveyApp')
+mongo_uri = f"mongodb://{username}:{password}@{host}:{port}/{dbName}"
+#mongo_uri = os.environ.get('MONGO_URI', 'mongodb://localhost:27017/SurveyApp')
 client = MongoClient(mongo_uri)
 db = client.get_default_database()
 

@@ -5,11 +5,13 @@ services:
     build:
       dockerfile: query_api.dockerfile
     volumes:
-      - /var/transferware.ai-main/python_src/scratch:/python_src/scratch #TODO match with your system
+      - ./python_src/scratch:/python_src/scratch #TODO match with your system
     user: root #temporary
-    environment:
-      - "TRANSFERWARE_QUERY.TORCH_DEVICE=cpu" # TODO with the nvidia runtime this can be cuda
-      - MONGO_URI=mongodb://mongo-container:27017/SurveyApp
+    env_file:
+      - ./.env
+    #environment:
+      #- "TRANSFERWARE_QUERY.TORCH_DEVICE=cpu" # TODO with the nvidia runtime this can be cuda
+      #- MONGO_URI=mongodb://mongo-container:27017/SurveyApp
     deploy:
       replicas: 2
     depends_on:
@@ -49,8 +51,8 @@ services:
       dockerfile: survey-app/Dockerfile
     ports:
       - "5002:5001"
-    environment:
-      - MONGO_URI=mongodb://mongo-container:27017/SurveyApp
+    env_file:
+      - ./.env
     depends_on:
       - mongodb
     labels:
@@ -64,10 +66,14 @@ services:
 
   mongodb:
     image: docker.io/mongo:7.0
+    command: mongod --auth --bind_ip 0.0.0.0  
     container_name: mongo-container
     restart: always
     ports:
       - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: Twai25!
     volumes:
       - mongo_data:/data/db
 
@@ -79,13 +85,14 @@ services:
       - "1883"
     volumes:
       - /var/transferware.ai-main/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      
     user: root #temporary
     #networks:
     #  - transferware_network
     depends_on:
       - balancer
-    #labels:
-    #  - "traefik.enable=false"
+    labels:
+      - "traefik.enable=false"
 
   # Reverse proxy
   balancer:
