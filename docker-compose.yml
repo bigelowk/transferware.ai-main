@@ -101,6 +101,7 @@ services:
     volumes:
       - /var/transferware.ai-main/traefik.yml:/etc/traefik/traefik.yml
       - /var/run/docker.sock:/var/run/docker.sock
+      - /var/transferware.ai-main/tls.yml:/etc/traefik/tls.yml
       - /etc/letsencrypt:/etc/letsencrypt:ro
       - /etc/letsencrypt/live/transferware-ai.umd.umich.edu/fullchain.pem:/etc/traefik/fullchain.pem:ro
       - /etc/letsencrypt/live/transferware-ai.umd.umich.edu/privkey.pem:/etc/traefik/privkey.pem:ro

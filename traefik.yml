@@ -2,6 +2,8 @@
 providers:
   docker:
     {}
+  file:
+    filename: /etc/traefik/tls.yml
 
 entryPoints:
   # Redirect HTTP to HTTPS
@@ -21,12 +23,12 @@ entryPoints:
   dashboard:
     address: ":8081"
 
-tls:
-  stores: 
-    default:
-      defaultCertificate:
-        certFile: "/etc/letsencrypt/live/transferware-ai.umd.umich.edu/fullchain.pem"
-        keyFile: "/etc/letsencrypt/live/transferware-ai.umd.umich.edu/privkey.pem"
+#tls:
+#  stores: 
+#    default:
+#      defaultCertificate:
+#        certFile: "/etc/letsencrypt/live/transferware-ai.umd.umich.edu/fullchain.pem"
+#        keyFile: "/etc/letsencrypt/live/transferware-ai.umd.umich.edu/privkey.pem"
 
 # API and dashboard configuration
 api:

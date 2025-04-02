@@ -1,0 +1,6 @@
+tls:
+  stores:
+    default:
+      defaultCertificate:
+        certFile: "/etc/letsencrypt/live/transferware-ai.umd.umich.edu/fullchain.pem"
+        keyFile: "/etc/letsencrypt/live/transferware-ai.umd.umich.edu/privkey.pem"
