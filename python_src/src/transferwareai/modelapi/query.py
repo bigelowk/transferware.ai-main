@@ -80,17 +80,17 @@ async def query_model(
     logging.debug(f"Query took {(end - start) / 1e6}ms.")
 
     # take out the repeated results
-    matches = []
+    clean_matches = []
     ids = []
     for image in top_matches:
-        if len(matches) < 10:
+        if len(clean_matches) < settings.query.top_k:
             if image.id not in ids:
-                matches.append(image)
+                clean_matches.append(image)
                 ids.append(image.id)
-        if len(matches) >= 10:
+        if len(clean_matches) >= settings.query.top_k:
             break
 
-    return matches
+    return clean_matches
 
 
 @app.get("/pattern/image/{id}")
