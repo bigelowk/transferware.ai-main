@@ -27,7 +27,7 @@ skip_ids = [67001]
 # Least acceptible validation percent that will still deploy the model
 validation_threshold = 0.1 # TODO change for prod
 # Updates index only when updating, rather than retraining the model entirely
-update_index_only = false
+update_index_only = true
 # Takes a subset of the patterns to train on
 subset = false
 # The size of the subset to take -- the subset has a seed so it will take the same images every time
