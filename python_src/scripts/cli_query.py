@@ -90,15 +90,27 @@ if __name__ == "__main__":
     # Get matches
     # start = time.clock_gettime_ns(time.CLOCK_MONOTONIC) # This command does not work on Windows
     start = time.monotonic_ns()  # This command works on Windows 
-    
-    top = model.query(img)
+
+    top = model.query(img, top_k=settings.query.top_k + 10)
 
     # end = time.clock_gettime_ns(time.CLOCK_MONOTONIC)
     end = time.monotonic_ns()
 
+    # take out the repeated results
+    matches = []
+    ids = []
+    for image in top:
+        if len(matches) < 10:
+            if image.id not in ids:
+                matches.append(image)
+                ids.append(image.id)
+        if len(matches) >= 10:
+            break
+
+
     print(f"Ran in {(end-start)/1e+6:.2f}ms")
 
-    print(top)
+    print(matches)
 
     logging.info("Generating image...")
 
@@ -106,7 +118,7 @@ if __name__ == "__main__":
     cache_path = res_path.joinpath("cache/assets")
 
     # Build tensor that just concat all the images of matches
-    for m in tqdm(top):
+    for m in tqdm(matches):
         d = api.get_image_path_for_id(m.id)
         files = os.listdir(d)
 

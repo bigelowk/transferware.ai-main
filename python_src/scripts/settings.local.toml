@@ -9,7 +9,7 @@ access_token = "CHANGE ME" # TODO change for prod
 
 # Settings for the training script
 [training]
-torch_device = "cuda"
+torch_device = "cpu"
 # Num epochs to train
 epochs = 60
 # Number of epochs val loss worsens before we early stop
@@ -27,9 +27,9 @@ skip_ids = [67001]
 # Least acceptible validation percent that will still deploy the model
 validation_threshold = 0.1 # TODO change for prod
 # Updates index only when updating, rather than retraining the model entirely
-update_index_only = false
+update_index_only = true
 # Takes a subset of the patterns to train on
-subset = true
+subset = false
 # The size of the subset to take -- the subset has a seed so it will take the same images every time
 subset_n = 2000
 # IDs of the validation images that should also be included in the subset -- these are the cache ids, NOT tcc pattern ids

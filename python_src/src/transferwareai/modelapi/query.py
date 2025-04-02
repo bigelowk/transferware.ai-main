@@ -72,14 +72,25 @@ async def query_model(
             status_code=400, detail="Only jpg or png files are supported"
         )
 
-    # Query model
-    top_matches = model.query(img, top_k=settings.query.top_k)
+    # Query model (add 10 to the top k so that we can account for repeated results)
+    top_matches = model.query(img, top_k=settings.query.top_k + 10)
 
     end = time.clock_gettime_ns(time.CLOCK_MONOTONIC)
 
     logging.debug(f"Query took {(end - start) / 1e6}ms.")
 
-    return top_matches
+    # take out the repeated results
+    matches = []
+    ids = []
+    for image in top_matches:
+        if len(matches) < 10:
+            if image.id not in ids:
+                matches.append(image)
+                ids.append(image.id)
+        if len(matches) >= 10:
+            break
+
+    return matches
 
 
 @app.get("/pattern/image/{id}")
