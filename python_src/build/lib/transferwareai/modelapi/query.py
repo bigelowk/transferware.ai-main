@@ -78,7 +78,8 @@ async def query_model(
     """Send an image to the model, and get the 10 closest images back."""
 
     start = time.clock_gettime_ns(time.CLOCK_MONOTONIC)
-    # Get Client IP Address
+   
+# Get Client IP Address
     client_ip = request.client.host
 
     # Capture submission timestamp
@@ -103,19 +104,31 @@ async def query_model(
         )
 
     # Query model
-    top_matches = model.query(img, top_k=settings.query.top_k)
+    top_matches = model.query(img, top_k=settings.query.top_k + 10)
 
-    matches = {}
-    for img in top_matches:
-        matches[str(img.id)] = img.confidence
 
     end = time.clock_gettime_ns(time.CLOCK_MONOTONIC)
     query_time = (end - start) / 1e6  # Convert to milliseconds
 
+    logging.debug(f"Query took {(end - start) / 1e6}ms.")
+
+    # take out the repeated results
+    cleaned_matches = []
+    ids = []
+    for image in top_matches:
+        if len(cleaned_matches) < settings.query.top_k:
+            if image.id not in ids:
+                cleaned_matches.append(image)
+                ids.append(image.id)
+        if len(cleaned_matches) >= settings.query.top_k:
+            break
+    
+    matches = {}
+    for img in cleaned_matches:
+        matches[str(img.id)] = img.confidence
+
     # Store submission details in MongoDB
     #collection = mongoClient()
-
-
     result = db.image_analytics.insert_one({
         "submission_time": submission_time,
         "query_time_ms": query_time,
@@ -129,7 +142,7 @@ async def query_model(
     
     logging.info(f"Query from {client_ip} {result_id} took {query_time}ms.")
     
-    return top_matches
+    return cleaned_matches
 
 @app.get("/analytics_id/")
 async def get_analytics_id(request: Request):
