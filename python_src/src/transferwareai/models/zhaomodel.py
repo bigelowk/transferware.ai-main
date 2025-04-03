@@ -383,14 +383,19 @@ class ConvnextModel(EmbeddingsModelImplementation):
         if not pretrained:
             model_cnext.classifier[2] = torch.nn.Linear(768, class_count)
 
-        # Load trained model if provided
-        if weights:
-            model_pth = torch.load(weights)
-            model_cnext.load_state_dict(model_pth)
+        # # Load trained model if provided
+        # if weights:
+        #     model_pth = torch.load(weights)
+        #     model_cnext.load_state_dict(model_pth)
 
         # Add our class size
         if pretrained:
             model_cnext.classifier[2] = torch.nn.Linear(768, class_count)
+
+        # Load trained model if provided
+        if weights:
+            model_pth = torch.load(weights)
+            model_cnext.load_state_dict(model_pth)
 
         self.model = model_cnext.to(device)
 
@@ -537,8 +542,9 @@ class ZhaoTrainer(Trainer):
         logging.debug("Entering Zhao trainer")
 
         device = self._device
+        # TODO: Replace weights argument if you have pre-trained weights
         model_wrapper = self._implementation_class(
-            dataset.class_num(), None, True, device
+            dataset.class_num(), self._outer_dataset.joinpath("zhao_train.pth"), True, device
         )
         augmentations = transforms.Compose(
             [

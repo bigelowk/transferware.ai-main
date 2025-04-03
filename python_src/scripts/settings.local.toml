@@ -3,7 +3,7 @@
 # Abstract factory used
 model_implimentation = "ZhaoModelFactory"
 # Changes wether the cache will be automatically updated. Use for debugging
-update_cache = true
+update_cache = false
 # Token used for controling access to query api
 access_token = "CHANGE ME" # TODO change for prod
 
@@ -11,7 +11,7 @@ access_token = "CHANGE ME" # TODO change for prod
 [training]
 torch_device = "cpu"
 # Num epochs to train
-epochs = 50
+epochs = 5
 # Number of epochs val loss worsens before we early stop
 early_stopping_thresh = 3
 # Num images loaded per step in epoch
@@ -27,7 +27,7 @@ skip_ids = [67001]
 # Least acceptible validation percent that will still deploy the model
 validation_threshold = 0.1 # TODO change for prod
 # Updates index only when updating, rather than retraining the model entirely
-update_index_only = true
+update_index_only = false
 # Takes a subset of the patterns to train on
 subset = false
 # The size of the subset to take -- the subset has a seed so it will take the same images every time

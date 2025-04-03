@@ -6,7 +6,7 @@
       <excludeFolder url="file://$MODULE_DIR$/.venv2" />
       <excludeFolder url="file://$MODULE_DIR$/.venv3" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.12 (python_src)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.12 virtualenv at C:\Users\kappa\Documents\TWAI\transferware.ai-main\transferware.ai-main\python_src\.venv" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PyDocumentationSettings">
