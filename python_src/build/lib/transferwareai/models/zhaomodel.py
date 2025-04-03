@@ -542,10 +542,16 @@ class ZhaoTrainer(Trainer):
         logging.debug("Entering Zhao trainer")
 
         device = self._device
-        # TODO: Replace weights argument if you have pre-trained weights
         model_wrapper = self._implementation_class(
-            dataset.class_num(), self._outer_dataset.joinpath("zhao_train.pth"), True, device
+            dataset.class_num(),
+            self._outer_dataset.joinpath("zhao_train_checkpoint.pth") if self._outer_dataset.joinpath(
+                "zhao_train_checkpoint.pth").exists() else None,
+            True,
+            device
         )
+        logging.debug(f"Loading weights: {self._outer_dataset.joinpath("zhao_train_checkpoint.pth") if 
+        self._outer_dataset.joinpath("zhao_train_checkpoint.pth").exists() else None}")
+
         augmentations = transforms.Compose(
             [
                 transforms.ColorJitter(0.4, 0.4),

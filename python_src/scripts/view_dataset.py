@@ -1,4 +1,3 @@
-
 from transferwareai.config import settings
 from pathlib import Path
 from transferwareai.data.dataset import CacheDataset
@@ -6,6 +5,7 @@ from transferwareai.tccapi.api_cache import ApiCache
 from transferwareai.data.split_images import split
 
 
+"""This script is to help get a better idea of what the Api and Cache datasets look like """
 
 res_path = Path(settings.query.resource_dir)
 # Get cache
