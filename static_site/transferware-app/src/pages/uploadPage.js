@@ -274,7 +274,7 @@ function UploadPage() {
                 disabled={!selectedFile}
                 onClick={handleCancel}
               >
-                Cancel
+                Remove Image
               </button>
               <button
                 className={`bg-black text-white font-semibold px-4 py-2 rounded-md ${

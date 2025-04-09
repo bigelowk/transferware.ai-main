@@ -1,6 +1,7 @@
 .venv
 *.egg-info
 scratch
+.env.local
 
 
 node_modules

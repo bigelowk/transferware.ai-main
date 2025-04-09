@@ -91,11 +91,6 @@ function ViewMatches() {
                   Beta Testing Survey
                 </button>
               </div>
-              <img
-                className="max-w-80"
-                src={imagePreviewUrl}
-                alt="Uploaded Preview"
-              />
             </div>
           </div>
         ) : (
