@@ -19,7 +19,7 @@ batch_size = 32
 # The directory the cache and model resources will be written to
 resource_dir = "../scratch" # TODO change for prod
 # Validation directory. Should contain folders of pattern ids with images in them.
-validation_dir = "../scratch/val_off/Cropped" # TODO change for prod
+validation_dir = "../scratch/val_off/Border" # TODO change for prod
 # URL to connect to API for upadates
 api_url = "http://0.0.0.0:8080"
 # IDs to skip when training the model. Use when training errors due to corrupted image files.
@@ -45,7 +45,7 @@ split_specifications = [["pattern", 2, 2]]
 [query]
 torch_device = "cuda"
 # The directory the cache and model resources will be read from, and written to on update
-resource_dir = "../scratch" # TODO change for prod
+resource_dir = "./scratch" # TODO change for prod
 # Number of results to get from the model
 top_k = 10
 # Server settings

@@ -73,7 +73,7 @@ async def query_model(
         )
 
     # Query model (add 10 to the top k so that we can account for repeated results)
-    top_matches = model.query(img, top_k=settings.query.top_k + 10)
+    top_matches = model.query(img, top_k=settings.query.top_k + 20)
 
     end = time.clock_gettime_ns(time.CLOCK_MONOTONIC)
 

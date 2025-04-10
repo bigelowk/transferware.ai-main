@@ -91,7 +91,7 @@ if __name__ == "__main__":
     # start = time.clock_gettime_ns(time.CLOCK_MONOTONIC) # This command does not work on Windows
     start = time.monotonic_ns()  # This command works on Windows 
 
-    top = model.query(img, top_k=settings.query.top_k + 10)
+    top = model.query(img, top_k=settings.query.top_k + 20)
 
     # end = time.clock_gettime_ns(time.CLOCK_MONOTONIC)
     end = time.monotonic_ns()

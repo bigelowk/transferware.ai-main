@@ -26,18 +26,6 @@ logging.getLogger().setLevel(logging.DEBUG)
 
 if __name__ == "__main__":
 
-    def validate(
-            self, model: ZhaoModel, validation_set: ImageFolder
-    ) -> tuple[dict[int, float], float]:
-
-        transform = transforms.Compose([transforms.ToTensor()])
-        validation_set.transform = transform
-
-        return GenericValidator(self.device).validate(model, validation_set)
-
-    EmbeddingsValidator.validate = validate
-
-
     # get the factory for the model implementation
     factory = get_abstract_factory(settings.model_implimentation, "training")
 
