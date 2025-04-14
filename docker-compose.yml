@@ -23,8 +23,8 @@ services:
       # Namespace query api on /api to allow static site on root
       - traefik.http.routers.query-api.rule=PathPrefix(`/api`)
       - traefik.http.routers.query-api.middlewares=strip-api
-      - "traefik.http.services.query-api.loadbalancer.server.port=8080"
-      - "traefik.enable=true"
+      # - "traefik.http.services.query-api.loadbalancer.server.port=8080"
+      # - "traefik.enable=true"
 
   # Serves the frontend
   static_site:
@@ -37,9 +37,9 @@ services:
     depends_on:
       - balancer
     labels:
-      - "traefik.enable=true"
       - "traefik.http.routers.static-site.rule=PathPrefix(`/`) && !PathPrefix(`/api`)"
-   
+      # - "traefik.enable=true"
+
   survey_app:
     build: 
       dockerfile: survey-app/Dockerfile
@@ -50,9 +50,9 @@ services:
     depends_on:
       - mongodb
     labels:
-      - "traefik.enable=true"
+      # - "traefik.enable=true"
       - "traefik.http.routers.survey-app.rule=(PathPrefix(`/survey`) || PathPrefix(`/results`) || PathPrefix(`/submit`))" 
-      - "traefik.http.services.survey-app.loadbalancer.server.port=5001"
+      # - "traefik.http.services.survey-app.loadbalancer.server.port=5001"
 
   mongodb:
     image: docker.io/mongo:7.0
