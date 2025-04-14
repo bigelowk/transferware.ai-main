@@ -19,7 +19,7 @@ function ViewMatches() {
         console.log("Fetched result_id:", resultId);
   
         if (resultId) {
-          document.location.assign(`http://transferware-ai.umd.umich.edu/survey/?analytics_id=${resultId}`);
+          document.location.assign(`http://localhost/survey/?analytics_id=${resultId}`);
         } else {
           console.warn("Result ID not available yet");
         }

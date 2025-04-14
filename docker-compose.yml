@@ -4,9 +4,10 @@ services:
   query_api:
     build:
       dockerfile: query_api.dockerfile
+    ports:
+      - "8080"
     volumes:
-      - /var/transferware.ai-main/python_src/scratch:/python_src/scratch #TODO match with your system
-    user: root #temporary
+      - ./python_src/scratch:/python_src/scratch # TODO match your system, this is the resource dir
     environment:
       - "TRANSFERWARE_QUERY.TORCH_DEVICE=cpu" # TODO with the nvidia runtime this can be cuda
       - MONGO_URI=mongodb://mongo-container:27017/SurveyApp
@@ -16,33 +17,28 @@ services:
       - balancer
       - mongodb
       - broker
-    #networks:
-    #  - transferware_network
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.query-api.rule=Host(`transferware-ai.umd.umich.edu`) && PathPrefix(`/api`)"
-      - "traefik.http.routers.query-api.entrypoints=websecure"
-      - "traefik.http.routers.query-api.tls=true"
+      # Strip /api as the python server serves on root
       - "traefik.http.middlewares.strip-api.stripprefix.prefixes=/api"
-      - "traefik.http.routers.query-api.middlewares=strip-api"
+      # Namespace query api on /api to allow static site on root
+      - traefik.http.routers.query-api.rule=PathPrefix(`/api`)
+      - traefik.http.routers.query-api.middlewares=strip-api
       - "traefik.http.services.query-api.loadbalancer.server.port=8080"
+      - "traefik.enable=true"
 
   # Serves the frontend
   static_site:
     build:
       dockerfile: static_site.dockerfile
+    ports:
+      - "8080"
     deploy:
       replicas: 2
-    #networks:
-    #  - transferware_network
     depends_on:
       - balancer
-      #- mongodb
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.static-site.rule=PathPrefix(`/`) && !PathPrefix(`/api`)"
-   # environment:
-   #   - "MONGO_URI: mongodb://mongodb:27017/mydatabase"
    
   survey_app:
     build: 
@@ -55,12 +51,8 @@ services:
       - mongodb
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.survey-app.rule=Host(`transferware-ai.umd.umich.edu`) && (PathPrefix(`/survey`) || PathPrefix(`/results`) || PathPrefix(`/submit`))" 
-      - "traefik.http.routers.survey-app.entrypoints=websecure"
-      - "traefik.http.routers.survey-app.tls=true"
+      - "traefik.http.routers.survey-app.rule=(PathPrefix(`/survey`) || PathPrefix(`/results`) || PathPrefix(`/submit`))" 
       - "traefik.http.services.survey-app.loadbalancer.server.port=5001"
-    #networks:
-    #  -transferware_network
 
   mongodb:
     image: docker.io/mongo:7.0
@@ -78,34 +70,23 @@ services:
     ports:
       - "1883"
     volumes:
-      - /var/transferware.ai-main/mosquitto.conf:/mosquitto/config/mosquitto.conf
-    user: root #temporary
-    #networks:
-    #  - transferware_network
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
     depends_on:
       - balancer
-    #labels:
-    #  - "traefik.enable=false"
+    labels:
+      - "traefik.enable=false"
 
   # Reverse proxy
   balancer:
-   
     image: traefik
     command:
-
     ports:
       - "80:80"  # HTTP
-      - "443:443"  # HTTPS
       - "8080:8080"  # Dashboard
       - "8081:8081" #Survey
     volumes:
-      - /var/transferware.ai-main/traefik.yml:/etc/traefik/traefik.yml
+      - ./traefik.yml:/etc/traefik/traefik.yml
       - /var/run/docker.sock:/var/run/docker.sock
-      - /var/transferware.ai-main/tls.yml:/etc/traefik/tls.yml
-      - /etc/letsencrypt:/etc/letsencrypt:ro
-      - /etc/letsencrypt/live/transferware-ai.umd.umich.edu/fullchain.pem:/etc/traefik/fullchain.pem:ro
-      - /etc/letsencrypt/live/transferware-ai.umd.umich.edu/privkey.pem:/etc/traefik/privkey.pem:ro
-    user: root #temporary
   
 volumes: 
   mongo_data:
