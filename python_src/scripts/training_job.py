@@ -5,6 +5,7 @@ from transferwareai.training_job import TrainingJob
 import logging
 import warnings
 
+
 # Set loggers to not spam
 warnings.filterwarnings("ignore", ".*Tensor.*")
 logging.getLogger("PIL").setLevel(logging.WARN)

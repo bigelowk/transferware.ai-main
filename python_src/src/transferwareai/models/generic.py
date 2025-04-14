@@ -7,6 +7,7 @@ import logging
 from tqdm import tqdm
 
 from .adt import Validator, Model
+from transferwareai.config import settings
 
 
 class GenericValidator(Validator):
@@ -31,7 +32,20 @@ class GenericValidator(Validator):
         for img, id in tqdm(dl):
             img = img.to(self.device)
 
-            matches = model.query(img[0])
+            matches = model.query(img[0], top_k=settings.query.top_k + 20)
+
+            clean_matches = []
+            ids = []
+            for image in matches:
+                if len(clean_matches) < settings.query.top_k:
+                    if image.id not in ids:
+                        clean_matches.append(image)
+                        ids.append(image.id)
+                if len(clean_matches) >= settings.query.top_k:
+                    break
+
+            matches = clean_matches
+
             id = int(idx_to_class[int(id[0])])
 
             # Check if correct id is in top 10 matches

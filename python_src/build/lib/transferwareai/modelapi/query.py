@@ -103,8 +103,8 @@ async def query_model(
             status_code=400, detail="Only jpg or png files are supported"
         )
 
-    # Query model
-    top_matches = model.query(img, top_k=settings.query.top_k + 10)
+    # Query model (add 10 to the top k so that we can account for repeated results)
+    top_matches = model.query(img, top_k=settings.query.top_k + 20)
 
 
     end = time.clock_gettime_ns(time.CLOCK_MONOTONIC)
