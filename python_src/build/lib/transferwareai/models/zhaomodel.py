@@ -767,10 +767,10 @@ class ZhaoTrainer(Trainer):
         torch.save(class_cnt, cnt_path)
 
     def generate_annoy_cache(
-        self,
-        model: T,
-        ds: CacheDataset,
-        visitor: Optional[Callable] = None,
+            self,
+            model: T,
+            ds: CacheDataset,
+            visitor: Optional[Callable] = None,
     ) -> tuple[annoy.AnnoyIndex, list[int]]:
         """
         Builds an annoy index for the dataset, using embeddings given by the model. Returns the index and a list of
