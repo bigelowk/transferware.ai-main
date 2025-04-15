@@ -43,7 +43,8 @@ services:
       - "traefik.http.routers.static-site.rule=PathPrefix(`/`) && !PathPrefix(`/api`)"
       - "traefik.http.routers.static-site.entrypoints=websecure"
       - "traefik.http.routers.static-site.middlewares=auth"
-      - "traefik.http.middlewares.auth.basicauth.users=UMD:$apr1$tofTM5/3$2HmM14uS3w9.lNXva4R8p/"
+      #Username and Password
+      - "traefik.http.middlewares.auth.basicauth.users=UMD:$$apr1$$tofTM5/3$$2HmM14uS3w9.lNXva4R8p/"
    # environment:
    #   - "MONGO_URI: mongodb://mongodb:27017/mydatabase"
    
