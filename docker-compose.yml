@@ -79,11 +79,10 @@ services:
   # Reverse proxy
   balancer:
     image: traefik
-    command:
     ports:
       - "80:80"  # HTTP
       - "8080:8080"  # Dashboard
-      - "8081:8081" #Survey
+      - "8081:8081" # Survey
     volumes:
       - ./traefik.yml:/etc/traefik/traefik.yml
       - /var/run/docker.sock:/var/run/docker.sock
