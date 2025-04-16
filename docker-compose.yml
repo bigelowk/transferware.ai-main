@@ -20,6 +20,7 @@ services:
       # Namespace query api on /api to allow static site on root
       - traefik.http.routers.query-api.rule=PathPrefix(`/api`)
       - traefik.http.routers.query-api.middlewares=strip-api
+      - traefik.enable=true
 
   # Serves the frontend
   static_site:
@@ -33,6 +34,7 @@ services:
       - balancer
     labels:
       - "traefik.http.routers.static-site.rule=PathPrefix(`/`) && !PathPrefix(`/api`)"
+      - traefik.enable=true
 
   # MQTT broker
   broker:
