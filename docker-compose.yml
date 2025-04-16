@@ -1,4 +1,4 @@
-    
+
 services:
   # Our replicated query APIs
   query_api:
@@ -24,7 +24,7 @@ services:
       - traefik.http.routers.query-api.rule=PathPrefix(`/api`)
       - traefik.http.routers.query-api.middlewares=strip-api
       # - "traefik.http.services.query-api.loadbalancer.server.port=8080"
-      # - "traefik.enable=true"
+      - "traefik.enable=true"
 
   # Serves the frontend
   static_site:
@@ -38,7 +38,7 @@ services:
       - balancer
     labels:
       - "traefik.http.routers.static-site.rule=PathPrefix(`/`) && !PathPrefix(`/api`)"
-      # - "traefik.enable=true"
+      - "traefik.enable=true"
 
   survey_app:
     build: 
@@ -50,7 +50,7 @@ services:
     depends_on:
       - mongodb
     labels:
-      # - "traefik.enable=true"
+      - "traefik.enable=true"
       - "traefik.http.routers.survey-app.rule=(PathPrefix(`/survey`) || PathPrefix(`/results`) || PathPrefix(`/submit`))" 
       # - "traefik.http.services.survey-app.loadbalancer.server.port=5001"
 
@@ -73,8 +73,8 @@ services:
       - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
     depends_on:
       - balancer
-    labels:
-      - "traefik.enable=false"
+    # labels:
+    #   - "traefik.enable=false"
 
   # Reverse proxy
   balancer:

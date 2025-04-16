@@ -70,8 +70,8 @@ db = client.get_default_database()
 @app.post("/query", response_model=list[ImageMatch])
 async def query_model(
     request: Request,
-    #file: Annotated[bytes, File()], model: Annotated[Model, Depends(get_model)],
-    file: UploadFile, model: Annotated[Model, Depends(get_model)],
+    #file: Annotated[bytes, File()], model: Annotated[Model, Depends(get_model)] #,
+    file: UploadFile, model: Annotated[Model, Depends(get_model)]#,
     #file: Annotated[bytes, File()]
 ):
     global result_id
