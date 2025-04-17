@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feedback Questionnaire</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 600px;
+      margin: 20px auto;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: bold;
+    }
+    input, textarea, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    button {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Aligns checkboxes to the left */
+}
+
+.checkbox-group div {
+  display: flex;
+  align-items: center;
+  margin: 15px 0; /* Adjust vertical spacing */
+}
+    .checkbox-group input {
+      margin-right: 10px;
+    }
+
+    .checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .checkbox-group div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  label {
+    white-space: nowrap; 
+    text-align: left;
+  }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Feedback Questionnaire</h1>
+    <form id="questionnaire-form" method="POST" action="/submit">
+      <!-- Name -->
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" placeholder="Enter your name" required>
+
+      <!-- Searched Image Details -->
+      <label>Did the searched image include (select all that apply):</label>
+      <div class="checkbox-group">
+        <div>
+          <input type="checkbox" id="whole-pattern" name="image-included" value="Whole Pattern">
+          <label for="whole-pattern">The whole pattern</label>
+        </div>
+        <div>
+          <input type="checkbox" id="whole-makers-mark" name="image-included" value="Whole Maker's Mark">
+          <label for="whole-makers-mark">The whole maker's mark</label>
+        </div>
+        <div>
+          <input type="checkbox" id="part-border" name="image-included" value="Part of the Border">
+          <label for="part-border">Part of the Border</label>
+        </div>
+        <div>
+          <input type="checkbox" id="part-central" name="image-included" value="Part of the Central Image">
+          <label for="part-central">Part of the Central Image</label>
+        </div>
+        <div>
+          <input type="checkbox" id="part-makers-mark" name="image-included" value="Part of the Maker's Mark">
+          <label for="part-makers-mark">Part of the Maker's Mark</label>
+        </div>
+        <div>
+          <input type="checkbox" id="other" name="image-included" value="Other">
+          <label for="other">Other</label>
+        </div>
+      </div>
+      
+      <!-- Additional field for "Other" details -->
+      <div id="other-description" style="display: none;">
+        <label for="other-details">Please specify:</label>
+        <input type="text" id="other-details" name="other-details" placeholder="Specify other details">
+      </div>
+
+      <!-- Percentage of Whole Pattern Searched -->
+      <label for="pattern-percentage">Approximately what percentage of the whole pattern did you search with?</label>
+      <select id="pattern-percentage" name="pattern-percentage" required>
+        <option value="">Select</option>
+        <option value="Complete">Complete</option>
+        <option value="75-99%">75-99%</option>
+        <option value="50-75%">50-75%</option>
+        <option value="25-50%">25-50%</option>
+        <option value="less than 25%">Less than 25%</option>
+      </select>
+
+      <label>Select the shape of vessel searched (if known):</label>
+      <div class="checkbox-group">
+        <div>
+          <input type="checkbox" id="whole-pattern" name="image-included" value="Whole Pattern">
+          <label for="whole-pattern">Flatware</label>
+        </div>
+        <div>
+          <input type="checkbox" id="whole-makers-mark" name="image-included" value="Whole Maker's Mark">
+          <label for="whole-makers-mark">Hollowware</label>
+        </div>
+        <div>
+          <input type="checkbox" id="other" name="image-included" value="Other">
+          <label for="other">Other</label>
+        </div>
+      </div>
+
+      <label for="pattern-found">Did the results include the correct pattern?</label>
+      <select id="pattern-found" name="pattern-found" required>
+        <option value="">Select</option>
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+      </select>
+
+      <div id="follow-up-questions" style="display: none;">
+        <label for="search-rank">Where did it fall in the search results?</label>
+        <input type="text" id="search-rank" name="search-rank" placeholder="e.g., first pattern suggested, 2nd, 15th, etc.">
+        
+        <label for="tcc-pattern-number">If known, what is the pattern number from the TCC database?</label>
+        <input type="text" id="tcc-pattern-number" name="tcc-pattern-number" placeholder="Enter pattern number">
+      </div>
+      
+      <!-- General Feedback -->
+      <label for="general-feedback">General Feedback:</label>
+      <textarea id="general-feedback" name="general-feedback" rows="4" placeholder="Enter your feedback" required></textarea>
+      <input type="hidden" id="analytics_id" name="analytics_id" >
+      <!-- Submit Button -->
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+
+  <script>
+
+    function getQueryParam(param) {
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        return urlParams.get(param);
+    }
+
+    const analyticsId = getQueryParam("analytics_id");
+    console.log(analyticsId);
+    document.getElementById('analytics_id').value = analyticsId;
+    // Toggle display for the "Other" description field
+    document.getElementById('other').addEventListener('change', function () {
+      const otherDescription = document.getElementById('other-description');
+      if (this.checked) {
+        otherDescription.style.display = 'block';
+      } else {
+        otherDescription.style.display = 'none';
+        const input = otherDescription.querySelector('input');
+        if (input) input.value = '';
+      }
+    });
+
+    // Toggle display for follow-up questions based on the selected answer
+    document.getElementById('pattern-found').addEventListener('change', function () {
+      const followUpQuestions = document.getElementById('follow-up-questions');
+      if (this.value === 'Yes') {
+        followUpQuestions.style.display = 'block';
+      } else {
+        followUpQuestions.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

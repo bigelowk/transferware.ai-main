@@ -550,6 +550,7 @@ class ZhaoTrainer(Trainer):
             device
         )
         logging.debug(f"Loading weights: {self._outer_dataset.joinpath('zhao_train_checkpoint.pth') if self._outer_dataset.joinpath('zhao_train_checkpoint.pth').exists() else None}")
+
         augmentations = transforms.Compose(
             [
                 transforms.ColorJitter(0.4, 0.4),

@@ -55,4 +55,3 @@ if __name__ == "__main__":
     test = cache.filter(pl.col("id") == 81193)
     print(test)
 
-

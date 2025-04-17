@@ -96,7 +96,8 @@ if __name__ == "__main__":
     # end = time.clock_gettime_ns(time.CLOCK_MONOTONIC)
     end = time.monotonic_ns()
 
-    # take out the repeated results
+
+   # take out the repeated results
     matches = []
     ids = []
     for image in top:
@@ -141,3 +142,4 @@ if __name__ == "__main__":
 
     # Display to user
     plt.show()
+    

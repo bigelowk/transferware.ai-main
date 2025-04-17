@@ -1,5 +1,6 @@
+
 services:
-  # Our replicated query apis
+  # Our replicated query APIs
   query_api:
     build:
       dockerfile: query_api.dockerfile
@@ -9,10 +10,12 @@ services:
       - ./python_src/scratch:/python_src/scratch # TODO match your system, this is the resource dir
     environment:
       - "TRANSFERWARE_QUERY.TORCH_DEVICE=cpu" # TODO with the nvidia runtime this can be cuda
+      - MONGO_URI=mongodb://mongo-container:27017/SurveyApp
     deploy:
       replicas: 2
     depends_on:
       - balancer
+      - mongodb
       - broker
     labels:
       # Strip /api as the python server serves on root
@@ -20,7 +23,8 @@ services:
       # Namespace query api on /api to allow static site on root
       - traefik.http.routers.query-api.rule=PathPrefix(`/api`)
       - traefik.http.routers.query-api.middlewares=strip-api
-      - traefik.enable=true
+      # - "traefik.http.services.query-api.loadbalancer.server.port=8080"
+      - "traefik.enable=true"
 
   # Serves the frontend
   static_site:
@@ -34,7 +38,30 @@ services:
       - balancer
     labels:
       - "traefik.http.routers.static-site.rule=PathPrefix(`/`) && !PathPrefix(`/api`)"
-      - traefik.enable=true
+      - "traefik.enable=true"
+
+  survey_app:
+    build: 
+      dockerfile: survey-app/Dockerfile
+    ports:
+      - "5002:5001"
+    environment:
+      - MONGO_URI=mongodb://mongo-container:27017/SurveyApp
+    depends_on:
+      - mongodb
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.survey-app.rule=(PathPrefix(`/survey`) || PathPrefix(`/results`) || PathPrefix(`/submit`))" 
+      # - "traefik.http.services.survey-app.loadbalancer.server.port=5001"
+
+  mongodb:
+    image: docker.io/mongo:7.0
+    container_name: mongo-container
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
 
   # MQTT broker
   broker:
@@ -46,17 +73,19 @@ services:
       - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
     depends_on:
       - balancer
-    labels:
-      - "traefik.enable=false"
+    # labels:
+    #   - "traefik.enable=false"
 
   # Reverse proxy
   balancer:
     image: traefik
     ports:
-      # Our application
-      - "80:80"
-      # The Web UI (enabled by --api.insecure=true)
-      - "8080:8080"
+      - "80:80"  # HTTP
+      - "8080:8080"  # Dashboard
+      - "8081:8081" # Survey
     volumes:
       - ./traefik.yml:/etc/traefik/traefik.yml
       - /var/run/docker.sock:/var/run/docker.sock
+  
+volumes: 
+  mongo_data:
