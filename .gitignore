@@ -1,6 +1,7 @@
 .venv
 *.egg-info
 scratch
+settings.local.toml
 .env.local
 
 

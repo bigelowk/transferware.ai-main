@@ -130,7 +130,6 @@ class ApiCache:
     @staticmethod
     def _requires_update(cache_file: Path) -> bool:
         if cache_file.exists():
-
             # Make sure that the cache is clean -- see CleanCache file for details
             clean_cache(cache_file)
             

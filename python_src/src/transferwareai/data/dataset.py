@@ -119,3 +119,6 @@ class CacheDataset(Dataset):
         many images there are for a pattern.
         """
         return self._image_paths["id"].to_list()
+
+    def append_paths(self, new_paths):
+        self._image_paths = pl.concat([self._image_paths, new_paths], how="vertical_relaxed")

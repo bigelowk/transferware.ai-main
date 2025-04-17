@@ -17,12 +17,13 @@ dynaconf
 
 polars
 pandas # for cleaning cache
+opencv-python # for splitting images for training
 requests
 
 aiomqtt
 aiohttp
 aiofile
-#uvloop   -- this was not used by the original team
+# uvloop   -- this was included but not used by the original team
 
 pytest
 tensorboard

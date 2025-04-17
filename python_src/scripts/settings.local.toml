@@ -3,7 +3,7 @@
 # Abstract factory used
 model_implimentation = "ZhaoModelFactory"
 # Changes wether the cache will be automatically updated. Use for debugging
-update_cache = true
+update_cache = false
 # Token used for controling access to query api
 access_token = "CHANGE ME" # TODO change for prod
 
@@ -11,29 +11,41 @@ access_token = "CHANGE ME" # TODO change for prod
 [training]
 torch_device = "cpu"
 # Num epochs to train
-epochs = 15
+epochs = 1
 # Number of epochs val loss worsens before we early stop
 early_stopping_thresh = 3
 # Num images loaded per step in epoch
-batch_size = 9
+batch_size = 32
 # The directory the cache and model resources will be written to
 resource_dir = "../scratch" # TODO change for prod
 # Validation directory. Should contain folders of pattern ids with images in them.
-validation_dir = "../scratch/val" # TODO change for prod
+validation_dir = "../scratch/val_off/Border" # TODO change for prod
 # URL to connect to API for upadates
 api_url = "http://0.0.0.0:8080"
 # IDs to skip when training the model. Use when training errors due to corrupted image files.
 skip_ids = [67001]
 # Least acceptible validation percent that will still deploy the model
-validation_threshold = 0.7 # TODO change for prod
+validation_threshold = 0.1 # TODO change for prod
 # Updates index only when updating, rather than retraining the model entirely
 update_index_only = false
+# Takes a subset of the patterns to train on
+subset = false
+# The size of the subset to take -- the subset has a seed so it will take the same images every time
+subset_n = 2000
+# IDs of the validation images that should also be included in the subset -- these are the cache ids, NOT tcc pattern ids
+val_ids = [47293, 47312, 49403, 50161, 52332, 52463, 54131, 54656, 54727, 56311,
+            56654, 58325, 59211, 60598, 60615, 62913, 66668, 68326, 74386, 77920, 185592]
+# When training, split the images into smaller pieces
+split_images = true
+# The image tag to split and how many rows and columns to split it into. Formatted as a nested list: [['tag', rows, cols], ...]
+split_specifications = [["pattern", 2, 2]]
+
 
 # Settings for the query api
 [query]
-torch_device = "cpu"
+torch_device = "cuda"
 # The directory the cache and model resources will be read from, and written to on update
-resource_dir = "../scratch" # TODO change for prod
+resource_dir = "./scratch" # TODO change for prod
 # Number of results to get from the model
 top_k = 10
 # Server settings
